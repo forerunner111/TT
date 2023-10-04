@@ -1,106 +1,73 @@
-import { StatusBar } from "expo-status-bar";
-import { SafeAreaView } from "react-native";
-import { StyleSheet, Text, View } from "react-native";
-import * as React from "react";
-import FancyTable from "react-native-fancy-table";
+import React, { Component } from "react";
+import { StyleSheet, View, ScrollView } from "react-native";
+import { Table, TableWrapper, Row } from "react-native-table-component";
 
-export default function PartidosScreen() {
-  const header = [
-    " id",
-    "Roll No",
-    "Order Qty",
-    "Line Input",
-    "Line Balalance",
-    "Production",
-    "Sample",
-    "Killed",
-    "Missing",
-    "Buy Date",
-    "Ship Date",
-    "Proto No",
-    "Set Code",
-    "Destination Place",
-    "Delivery Place",
-    "Item Number",
-  ];
-  const tableBody = [
-    {
-      id: 1,
-      RollNo: "1",
-      Pdm_ItemCode: "2442010",
-      description: " BUET",
-      LotNo: "N23060829",
-      UOM: "YDS",
-      RollQty: 55,
-      RollWidth: "153cm",
-      RollColor: "DKT N07A BLACK",
-      RollShrinkageWarp: "",
-      RollshrinkageWeft: "",
-      SupplierId: 380,
-      supplier: "",
-      ItemId: 0,
-      item: "Fabric",
-      consignment: "3333",
-    },
-    {
-      id: 1,
-      RollNo: "1",
-      Pdm_ItemCode: "2442010",
-      description: " BUET",
-      LotNo: "N23060829",
-      UOM: "YDS",
-      RollQty: 55,
-      RollWidth: "153cm",
-      RollColor: "DKT N07A BLACK",
-      RollShrinkageWarp: "",
-      RollshrinkageWeft: "",
-      SupplierId: 380,
-      supplier: "",
-      ItemId: 0,
-      item: "Fabric",
-      consignment: "3333",
-    },
-  ];
+export default class PartidosScreen extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      tableHead: [
+        "Head",
+        "Head2",
+        "Head3",
+        "Head4",
+        "Head5",
+        "Head6",
+        "Head7",
+        "Head8",
+        "Head9",
+      ],
+      widthArr: [40, 60, 80, 100, 120, 140, 160, 180, 200],
+    };
+  }
 
-  return (
-    <SafeAreaView>
+  render() {
+    const state = this.state;
+    const tableData = [];
+    for (let i = 0; i < 30; i += 1) {
+      const rowData = [];
+      for (let j = 0; j < 9; j += 1) {
+        rowData.push(`${i}${j}`);
+      }
+      tableData.push(rowData);
+    }
+
+    return (
       <View style={styles.container}>
-        <FancyTable
-          headerBGColor="silver"
-          headerFontColor="white"
-          headerFontSize={15}
-          bodyFontSize={13}
-          bodyFontColor="black"
-          tableHeight={1.4}
-          header={header}
-          tableBody={tableBody}
-          rowWidth={4}
-          borderColor="gray"
-          borderWidth={1}
-        />
+        <ScrollView horizontal={true}>
+          <View>
+            <Table borderStyle={{ borderWidth: 1, borderColor: "#C1C0B9" }}>
+              <Row
+                data={state.tableHead}
+                widthArr={state.widthArr}
+                style={styles.header}
+                textStyle={styles.text}
+              />
+            </Table>
+            <ScrollView style={styles.dataWrapper}>
+              <Table borderStyle={{ borderWidth: 1, borderColor: "#C1C0B9" }}>
+                {tableData.map((rowData, index) => (
+                  <Row
+                    key={index}
+                    data={rowData}
+                    widthArr={state.widthArr}
+                    style={styles.row}
+                    textStyle={styles.text}
+                  />
+                ))}
+              </Table>
+            </ScrollView>
+          </View>
+        </ScrollView>
       </View>
-    </SafeAreaView>
-  );
+    );
+  }
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 16, paddingTop: 100, backgroundColor: "#fff" },
-  head: { height: 40, backgroundColor: "orange" },
-  wrapper: { flexDirection: "row" },
-  title: { flex: 1, backgroundColor: "#2ecc71" },
-  row: { height: 28 },
-  text: { textAlign: "center" },
+  container: { flex: 1, padding: 16, paddingTop: 30, backgroundColor: "#fff" },
+  header: { height: 50, backgroundColor: "#537791" },
+  text: { textAlign: "center", fontWeight: "100" },
+  dataWrapper: { marginTop: -1 },
+  row: { height: 40, backgroundColor: "#E7E6E1" },
 });
-
-/*const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  tabla: {
-    borderColor: "#000000",
-    borderWidth: 2,
-  },
-});*/

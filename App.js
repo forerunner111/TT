@@ -27,7 +27,11 @@ export default function App() {
           component={RegisterScreen}
           options={{ headerShown: false }}
         />
-        <Stack.Screen name="Partidos" component={PartidosScreen} />
+        <Stack.Screen
+          name="Partidos"
+          component={PartidosScreen}
+          options={{ headerShown: false }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

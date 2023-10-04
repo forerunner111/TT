@@ -1,6 +1,14 @@
 import React, { Component } from "react";
-import { StyleSheet, View, ScrollView } from "react-native";
+import {
+  StyleSheet,
+  View,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { Table, TableWrapper, Row } from "react-native-table-component";
+import Ionicons from "@expo/vector-icons/Ionicons";
 
 export default class PartidosScreen extends Component {
   constructor(props) {
@@ -34,6 +42,17 @@ export default class PartidosScreen extends Component {
 
     return (
       <View style={styles.container}>
+        <Text style={styles.titulo}>Partido</Text>
+
+        <View style={styles.IconInput}>
+          <TouchableOpacity>
+            <Ionicons name="person-circle-outline" size={35} color="#ff6624" />
+          </TouchableOpacity>
+          <Text style={styles.TextoLabels}>Iniciar sesión</Text>
+        </View>
+
+        <Text style={styles.titulotabla}>Tabla de Posiciones</Text>
+
         <ScrollView horizontal={true}>
           <View>
             <Table borderStyle={{ borderWidth: 1, borderColor: "#C1C0B9" }}>
@@ -65,9 +84,54 @@ export default class PartidosScreen extends Component {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 16, paddingTop: 30, backgroundColor: "#fff" },
-  header: { height: 50, backgroundColor: "#537791" },
-  text: { textAlign: "center", fontWeight: "100" },
-  dataWrapper: { marginTop: -1 },
-  row: { height: 40, backgroundColor: "#E7E6E1" },
+  container: {
+    flex: 1,
+    padding: 16,
+    paddingTop: 30,
+    backgroundColor: "#fff",
+  },
+  header: {
+    height: 50,
+    backgroundColor: "#537791",
+  },
+  text: {
+    textAlign: "center",
+    fontWeight: "100",
+  },
+  dataWrapper: {
+    marginTop: -1,
+  },
+  row: {
+    height: 40,
+    backgroundColor: "#E7E6E1",
+  },
+  titulo: {
+    textAlign: "center",
+    fontSize: 34,
+    fontWeight: "bold",
+    color: "#ff6624",
+  },
+  IconInput: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  boton: {
+    fontSize: 55,
+    backgroundColor: "#ff6624",
+    borderRadius: 5,
+    marginVertical: 7,
+    paddingHorizontal: 10,
+    height: 50,
+  },
+  TextoLabels: {
+    color: "#ff6624",
+    fontSize: 28,
+    fontWeight: "bold",
+  },
+  titulotabla: {
+    textAlign: "center",
+    fontSize: 34,
+    fontWeight: "bold",
+    color: "#000000",
+  },
 });

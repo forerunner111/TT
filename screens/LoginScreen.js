@@ -47,11 +47,11 @@ const LoginScreen = () => {
           </View>
           <TouchableOpacity
             style={styles.boton}
-            onPress={() => navigation.navigate("Home")}
+            onPress={() => navigation.navigate("Admin")}
           >
             <Text style={styles.TextoBoton}>Iniciar sesión</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate("Home")}>
+          <TouchableOpacity onPress={() => navigation.navigate("Entrenador")}>
             <Text style={styles.TextoBoton2}>Regresar </Text>
           </TouchableOpacity>
         </View>

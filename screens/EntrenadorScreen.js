@@ -9,8 +9,16 @@ import { useState } from "react";
 import { CheckBox } from "@rneui/themed";
 import { SelectList } from "react-native-dropdown-select-list";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
+import {
+  Collapse,
+  CollapseHeader,
+  CollapseBody,
+  AccordionList,
+} from "accordion-collapse-react-native";
+import { useNavigation } from "@react-navigation/native";
 
 const EntrenadorScreen = () => {
+  const navigation = useNavigation();
   const [modoEquipoJugador, onChangeModoEquipoJugador] = React.useState(true);
   const [nombreEquipo, onChangeNombreEquipo] = useState("");
   const [selectedIndex, setIndex] = React.useState(0);
@@ -50,12 +58,37 @@ const EntrenadorScreen = () => {
         <View>
           <View style={styles.IconInput}>
             <TouchableOpacity>
-              <Ionicons name="menu" size={35} color="#000000" />
+              <Ionicons name="exit" size={35} color="#000000" />
             </TouchableOpacity>
 
             <Text style={styles.titulo}>Entrenador</Text>
             <Text></Text>
             <Text></Text>
+          </View>
+
+          <View padding={10}>
+            <Collapse>
+              <CollapseHeader style={styles.menucol}>
+                <View>
+                  <Ionicons name="person" size={35} color="#000000" />
+                </View>
+              </CollapseHeader>
+              <CollapseBody style={styles.menucol}>
+                <TouchableOpacity onPress={() => navigation.navigate("Admin")}>
+                  <Text style={styles.textcol}>Administrador</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => navigation.navigate("Entrenador")}
+                >
+                  <Text style={styles.textcol}>Entrenador</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => navigation.navigate("Comision")}
+                >
+                  <Text style={styles.textcol}>Comision diciplinaria</Text>
+                </TouchableOpacity>
+              </CollapseBody>
+            </Collapse>
           </View>
 
           <Text style={styles.Subtitulo}>Equipos inscritos</Text>
@@ -239,15 +272,6 @@ const EntrenadorScreen = () => {
                     maxLength={18}
                   />
 
-                  <Text style={styles.TextoLabels}>Telefono</Text>
-                  <TextInput
-                    style={styles.input}
-                    onChangeText={onChangeTelefono}
-                    value={telefono}
-                    placeholder="##########"
-                    keyboardType="numeric"
-                    maxLength={10}
-                  />
                   <Text style={styles.TextoLabels}>Sexo</Text>
                   <View>
                     <CheckBox
@@ -464,6 +488,13 @@ const styles = StyleSheet.create({
     // marginVertical: 10,
     paddingHorizontal: 5,
     height: "auto",
+  },
+  menucol: {
+    alignItems: "center",
+  },
+  textcol: {
+    fontSize: 22,
+    fontWeight: "bold",
   },
 });
 

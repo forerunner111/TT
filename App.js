@@ -9,6 +9,8 @@ import DrawerNavigation from "./screens/DrawerNavigation";
 import AdminScreen from "./screens/AdminScreen";
 import EntrenadorScreen from "./screens/EntrenadorScreen";
 import ComisionScreen from "./screens/ComisionScreen";
+import tablaejemplo from "./screens/tablaejemplo";
+import JefeScreen from "./screens/JefeScreen";
 
 const Stack = createStackNavigator();
 
@@ -54,6 +56,16 @@ export default function App() {
         <Stack.Screen
           name="Comision"
           component={ComisionScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Jefe"
+          component={JefeScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="tabla"
+          component={tablaejemplo}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

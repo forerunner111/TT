@@ -171,7 +171,7 @@ const RegisterScreen = () => {
             keyboardType="numeric"
           />
           <View style={styles.boton}>
-            <TouchableOpacity onPress={() => navigation.navigate("Comision")}>
+            <TouchableOpacity onPress={() => navigation.navigate("Login")}>
               <Text style={styles.TextoBoton}>Registrarse</Text>
             </TouchableOpacity>
           </View>

@@ -8,8 +8,16 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Table, TableWrapper, Row } from "react-native-table-component";
 import Checkbox from "expo-checkbox";
 import { useState } from "react";
+import {
+  Collapse,
+  CollapseHeader,
+  CollapseBody,
+  AccordionList,
+} from "accordion-collapse-react-native";
+import { useNavigation } from "@react-navigation/native";
 
 const AdminScreen = () => {
+  const navigation = useNavigation();
   const [modoActualizar, onChangeModoActualizar] = React.useState(true);
 
   //Nuevo registro
@@ -54,7 +62,7 @@ const AdminScreen = () => {
       <View>
         <View style={styles.IconInput}>
           <TouchableOpacity onPress={() => setIsOpen(!isOpen)}>
-            <Ionicons name="menu" size={35} color="#000000" />
+            <Ionicons name="exit" size={35} color="#000000" />
           </TouchableOpacity>
 
           <Text style={styles.titulo}>Administrador</Text>
@@ -63,6 +71,31 @@ const AdminScreen = () => {
         </View>
       </View>
       <ScrollView>
+        <View padding={10}>
+          <Collapse>
+            <CollapseHeader style={styles.menucol}>
+              <View>
+                <Ionicons name="person" size={35} color="#000000" />
+              </View>
+            </CollapseHeader>
+            <CollapseBody style={styles.menucol}>
+              <TouchableOpacity onPress={() => navigation.navigate("Admin")}>
+                <Text style={styles.textcol}>Administrador</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => navigation.navigate("Entrenador")}
+              >
+                <Text style={styles.textcol}>Entrenador</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => navigation.navigate("Comision")}>
+                <Text style={styles.textcol}>Comision diciplinaria</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => navigation.navigate("Jefe")}>
+                <Text style={styles.textcol}>Jefe de Arbitros</Text>
+              </TouchableOpacity>
+            </CollapseBody>
+          </Collapse>
+        </View>
         <Text style={styles.Subtitulo} paddingTop={10}>
           CRUD de Ususarios
         </Text>
@@ -503,6 +536,13 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginRight: 10,
     marginTop: 2,
+  },
+  menucol: {
+    alignItems: "center",
+  },
+  textcol: {
+    fontSize: 22,
+    fontWeight: "bold",
   },
 });
 

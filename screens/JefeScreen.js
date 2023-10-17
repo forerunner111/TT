@@ -1,9 +1,14 @@
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, ScrollView, TextInput } from "react-native";
 import React from "react";
-import { BarChart, LineChart, PieChart } from "react-native-gifted-charts";
-import { StyleSheet } from "react-native";
-import Ionicons from "@expo/vector-icons/Ionicons";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { StyleSheet } from "react-native";
+import { TouchableOpacity } from "react-native";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import { Table, TableWrapper, Row } from "react-native-table-component";
+import { useState } from "react";
+import { CheckBox } from "@rneui/themed";
+import { SelectList } from "react-native-dropdown-select-list";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 import {
   Collapse,
   CollapseHeader,
@@ -12,26 +17,22 @@ import {
 } from "accordion-collapse-react-native";
 import { useNavigation } from "@react-navigation/native";
 
-const ComisionScreen = () => {
+const JefeScreen = () => {
   const navigation = useNavigation();
-  const data = [
-    { value: 2, text: "10%", color: "green" },
-    { value: 10, text: "50%", color: "orange" },
-    { value: 3, text: "15%", color: "purple" },
-    { value: 5, text: "25%", color: "red" },
-  ];
   return (
-    <SafeAreaView>
-      <View paddingTop={5}>
+    <SafeAreaView style={styles.container}>
+      <View>
         <View style={styles.IconInput}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => setIsOpen(!isOpen)}>
             <Ionicons name="exit" size={35} color="#000000" />
           </TouchableOpacity>
 
-          <Text style={styles.titulo}>Comision Disiplinaria</Text>
+          <Text style={styles.titulo}>Jefe de arbitro</Text>
           <Text></Text>
           <Text></Text>
         </View>
+      </View>
+      <ScrollView>
         <View padding={10}>
           <Collapse>
             <CollapseHeader style={styles.menucol}>
@@ -51,36 +52,65 @@ const ComisionScreen = () => {
               <TouchableOpacity onPress={() => navigation.navigate("Comision")}>
                 <Text style={styles.textcol}>Comision diciplinaria</Text>
               </TouchableOpacity>
+              <TouchableOpacity onPress={() => navigation.navigate("Jefe")}>
+                <Text style={styles.textcol}>Jefe de Arbitros</Text>
+              </TouchableOpacity>
             </CollapseBody>
           </Collapse>
         </View>
-        <View style={styles.main}>
-          <Text style={styles.Subtitulo}>Faltas Cometidas</Text>
-          <View paddingTop={20}>
-            <PieChart
-              data={data}
-              donut
-              focusOnPress
-              showText
-              textColor="black"
-            />
-          </View>
+        <Text style={styles.Subtitulo}>Validacion de Usuarios</Text>
+        <View paddingHorizontal={10}>
+          <ScrollView horizontal={true}>
+            <Table borderStyle={{ borderWidth: 1, borderColor: "#000000" }}>
+              <Row
+                data={["Nombre", "Roles", "Validar"]}
+                widthArr={[150, 150, 150]}
+                style={styles.header}
+                textStyle={styles.text}
+              />
+              <Row
+                data={[["Juan"], ["Secretarios"], ["04/10/2023"]]}
+                widthArr={[150, 150, 150]}
+                style={styles.row}
+                textStyle={styles.text}
+              />
+              <Row
+                data={[["F"], ["Venados vs Red Sox"], ["04/10/2023"]]}
+                widthArr={[150, 150, 150]}
+                style={styles.row}
+                textStyle={styles.text}
+              />
+            </Table>
+          </ScrollView>
         </View>
-        <View>
-          <View style={styles.section}>
-            <Ionicons name="square" size={35} color="green" />
-            <Text> Tecnica </Text>
-            <Ionicons name="square" size={35} color="purple" paddingLeft={10} />
-            <Text> Antideportiva </Text>
-          </View>
-          <View style={styles.section}>
-            <Ionicons name="square" size={35} color="orange" />
-            <Text> Personal</Text>
-            <Ionicons name="square" size={35} color="red" paddingLeft={10} />
-            <Text> Descalificante</Text>
-          </View>
+        <Text style={styles.Subtitulo} paddingTop={30}>
+          Partidos Default
+        </Text>
+        <View paddingHorizontal={10}>
+          <ScrollView horizontal={true}>
+            <Table borderStyle={{ borderWidth: 1, borderColor: "#000000" }}>
+              <Row
+                data={["Nombre", "Roles", "Validar"]}
+                widthArr={[150, 150, 150]}
+                style={styles.header}
+                textStyle={styles.text}
+              />
+              <Row
+                data={[["Juan"], ["Secretarios"], ["04/10/2023"]]}
+                widthArr={[150, 150, 150]}
+                style={styles.row}
+                textStyle={styles.text}
+              />
+              <Row
+                data={[["F"], ["Venados vs Red Sox"], ["04/10/2023"]]}
+                widthArr={[150, 150, 150]}
+                style={styles.row}
+                textStyle={styles.text}
+              />
+            </Table>
+          </ScrollView>
         </View>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -245,4 +275,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ComisionScreen;
+export default JefeScreen;

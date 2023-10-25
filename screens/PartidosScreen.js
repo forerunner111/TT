@@ -34,6 +34,7 @@ export default class PartidosScreen extends Component {
   render() {
     const state = this.state;
     const tableData = [];
+
     for (let i = 0; i < 10; i += 1) {
       const rowData = [];
       for (let j = 0; j < 10; j += 1) {
@@ -140,9 +141,9 @@ export default class PartidosScreen extends Component {
               </View>
             </ScrollView>
           </View>
-          <View style={styles.boton}>
+          <TouchableOpacity style={styles.boton}>
             <Text style={styles.TextoBoton}>Descargar horarios</Text>
-          </View>
+          </TouchableOpacity>
           <TouchableOpacity
             onPress={() => this.props.navigation.navigate("Home")}
           >

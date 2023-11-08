@@ -3,11 +3,11 @@ import React from "react";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { SafeAreaView } from "react-native";
 import { StyleSheet } from "react-native";
-import { TouchableOpacity } from "react-native";
+import { TouchableOpacity, Alert } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { useState } from "react";
 import Checkbox from "expo-checkbox";
+import axios from "axios";
 
 const RegisterScreen = () => {
   const navigation = useNavigation();
@@ -21,20 +21,6 @@ const RegisterScreen = () => {
   const [colonia, onChangeColonia] = useState("");
   const [direccion, onChangeDireccion] = useState("");
   const [numArbitro, onChangeNumArbitro] = useState("");
-  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-
-  const showDatePicker = () => {
-    setDatePickerVisibility(true);
-  };
-
-  const hideDatePicker = () => {
-    setDatePickerVisibility(false);
-  };
-
-  const handleConfirm = (date) => {
-    console.warn("A date has been picked: ", date);
-    hideDatePicker();
-  };
 
   const [isComision, setComision] = useState(false);
   const [isEntrenador, setEntrenador] = useState(false);
@@ -45,6 +31,9 @@ const RegisterScreen = () => {
       <Text style={styles.titulo}>Registrarse</Text>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View>
+          <View>
+            <Text style={styles.TextoLabels}>Seleccione un rol</Text>
+          </View>
           <View style={styles.section}>
             <Checkbox
               style={styles.checkbox}
@@ -72,113 +61,173 @@ const RegisterScreen = () => {
             />
             <Text style={styles.paragraph}>Árbitro</Text>
           </View>
-          <Text style={styles.TextoLabels}>Nombre</Text>
-          <TextInput
-            style={styles.input}
-            onChangeText={onChangeNombre}
-            value={nombre}
-            placeholder="Nombre"
-          />
-          <Text style={styles.TextoLabels}>Apellido paterno</Text>
-          <TextInput
-            style={styles.input}
-            onChangeText={onChangeApellidoP}
-            value={apellidoP}
-            placeholder="Apellido Paterno"
-          />
-          <Text style={styles.TextoLabels}>CURP</Text>
-          <TextInput
-            style={styles.input}
-            onChangeText={onChangeCURP}
-            value={curp}
-            placeholder="CURP"
-            maxLength={18}
-          />
-          <Text style={styles.TextoLabels}>Email</Text>
-          <TextInput
-            style={styles.input}
-            onChangeText={onChangeEmail}
-            value={email}
-            placeholder="ejemplo@email.com"
-          />
+          <View>
+            {isArbitro || isComision || isEntrenador ? (
+              <View>
+                <Text style={styles.TextoLabels}>Nombre</Text>
+                <TextInput
+                  style={styles.input}
+                  onChangeText={onChangeNombre}
+                  value={nombre}
+                  placeholder="Nombre"
+                />
+                <Text style={styles.TextoLabels}>Apellido paterno</Text>
+                <TextInput
+                  style={styles.input}
+                  onChangeText={onChangeApellidoP}
+                  value={apellidoP}
+                  placeholder="Apellido Paterno"
+                />
+                <Text style={styles.TextoLabels}>CURP</Text>
+                <TextInput
+                  style={styles.input}
+                  onChangeText={onChangeCURP}
+                  value={curp}
+                  placeholder="CURP"
+                  maxLength={18}
+                />
+                <Text style={styles.TextoLabels}>Email</Text>
+                <TextInput
+                  style={styles.input}
+                  onChangeText={onChangeEmail}
+                  value={email}
+                  placeholder="ejemplo@email.com"
+                />
 
-          <Text style={styles.TextoLabels}>Contraseña</Text>
-          <View style={styles.input}>
-            <View style={styles.IconInput}>
-              <TextInput
-                secureTextEntry={modoPassword}
-                onChangeText={onChangePassword}
-                value={Contraseña}
-                placeholder="••••••••••"
-              />
-              <TouchableOpacity
-                onPress={() => onChangemodoPassword(!modoPassword)}
-              >
-                {modoPassword ? (
-                  <Ionicons name="eye" size={30} color="#ff6624" />
-                ) : (
-                  <Ionicons name="eye-off" size={30} color="#ff6624" />
-                )}
-              </TouchableOpacity>
-            </View>
+                <Text style={styles.TextoLabels}>Contraseña</Text>
+                <View style={styles.input}>
+                  <View style={styles.IconInput}>
+                    <TextInput
+                      value={Contraseña}
+                      placeholder="••••••••••"
+                      secureTextEntry={modoPassword}
+                      onChangeText={onChangePassword}
+                      maxLength={25}
+                    />
+                    <TouchableOpacity
+                      onPress={() => onChangemodoPassword(!modoPassword)}
+                    >
+                      {modoPassword ? (
+                        <Ionicons name="eye" size={30} color="#ff6624" />
+                      ) : (
+                        <Ionicons name="eye-off" size={30} color="#ff6624" />
+                      )}
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </View>
+            ) : (
+              <View></View>
+            )}
           </View>
-          <Text style={styles.TextoLabels}>Telefono</Text>
-          <TextInput
-            style={styles.input}
-            onChangeText={onChangeTelefono}
-            value={telefono}
-            placeholder="##########"
-            keyboardType="numeric"
-            maxLength={10}
-          />
-          <View style={styles.boton}>
-            <View style={styles.IconInput}>
-              <TouchableOpacity onPress={showDatePicker}>
-                <Text style={styles.TextoBoton}>Fecha de nacimiento</Text>
-              </TouchableOpacity>
-              <DateTimePickerModal
-                isVisible={isDatePickerVisible}
-                mode="date"
-                onConfirm={handleConfirm}
-                onCancel={hideDatePicker}
-              />
-              <TouchableOpacity onPress={showDatePicker}>
-                <Ionicons name="calendar" size={35} color="#ffffff" />
-              </TouchableOpacity>
-            </View>
+
+          <View>
+            {isEntrenador ? (
+              <View>
+                <Text style={styles.TextoLabels}>Telefono</Text>
+                <TextInput
+                  style={styles.input}
+                  onChangeText={onChangeTelefono}
+                  value={telefono}
+                  placeholder="##########"
+                  keyboardType="numeric"
+                  maxLength={10}
+                />
+
+                <Text style={styles.TextoLabels}>Colonia</Text>
+                <TextInput
+                  style={styles.input}
+                  onChangeText={onChangeColonia}
+                  value={colonia}
+                  placeholder="Colonia"
+                />
+                <Text style={styles.TextoLabels}>Direccion</Text>
+                <TextInput
+                  style={styles.input}
+                  onChangeText={onChangeDireccion}
+                  value={direccion}
+                  placeholder="Direccion"
+                />
+              </View>
+            ) : (
+              <View>
+                <Text></Text>
+              </View>
+            )}
           </View>
-          <Text style={styles.TextoLabels}>Colonia</Text>
-          <TextInput
-            style={styles.input}
-            onChangeText={onChangeColonia}
-            value={colonia}
-            placeholder="Colonia"
-          />
-          <Text style={styles.TextoLabels}>Direccion</Text>
-          <TextInput
-            style={styles.input}
-            onChangeText={onChangeDireccion}
-            value={direccion}
-            placeholder="Direccion"
-          />
-          <Text style={styles.TextoLabels}>Numero de arbitro</Text>
-          <TextInput
-            style={styles.input}
-            onChangeText={onChangeNumArbitro}
-            value={numArbitro}
-            placeholder="Numero de arbitro"
-            maxLength={2}
-            keyboardType="numeric"
-          />
-          <View style={styles.boton}>
-            <TouchableOpacity onPress={() => navigation.navigate("Login")}>
-              <Text style={styles.TextoBoton}>Registrarse</Text>
-            </TouchableOpacity>
+          <View>
+            {isArbitro ? (
+              <View>
+                <Text style={styles.TextoLabels}>Numero de arbitro</Text>
+                <TextInput
+                  style={styles.input}
+                  onChangeText={onChangeNumArbitro}
+                  value={numArbitro}
+                  placeholder="Numero de arbitro"
+                  maxLength={2}
+                  keyboardType="numeric"
+                />
+              </View>
+            ) : (
+              <View></View>
+            )}
           </View>
+          <View>
+            {isArbitro || isComision || isEntrenador ? (
+              <View style={styles.boton}>
+                <TouchableOpacity
+                  onPress={() =>
+                    //navigation.navigate("Login") &&
+                    axios
+                      .post("http://10.1.141.3:4000/api/register", {
+                        curp: curp,
+                        nombre: nombre,
+                        apellidoP: apellidoP,
+                        email: email,
+                        contrasena: Contraseña,
+                        numeroTel: telefono,
+                        direccion: direccion,
+                        colonia: colonia,
+                        numeroArb: numArbitro,
+                        comision: isComision,
+                        entrenador: isEntrenador,
+                        arbitro: isArbitro,
+                      })
+                      .then(function (response) {
+                        console.log(response);
+                        Alert.alert("Mensaje: ", "Ususaio creado con exito", [
+                          {
+                            text: "OK",
+                            onPress: () => navigation.navigate("Login"),
+                          },
+                        ]);
+                      })
+                      .catch(function (error) {
+                        console.log(error);
+                        Alert.alert(
+                          "Error: ",
+                          JSON.stringify(error["message"])
+                        );
+                      })
+                  }
+                >
+                  <Text style={styles.TextoBoton}>Registrarse</Text>
+                </TouchableOpacity>
+              </View>
+            ) : (
+              <View alignItems={"center"}>
+                <Text style={styles.TextoLabels}>
+                  Elije un rol para poder registrarte
+                </Text>
+              </View>
+            )}
+          </View>
+
           <TouchableOpacity onPress={() => navigation.navigate("Home")}>
             <Text style={styles.TextoBoton2}>Regresar </Text>
           </TouchableOpacity>
         </View>
+        <Text padding={150}></Text>
       </ScrollView>
     </SafeAreaView>
   );
@@ -212,20 +261,22 @@ const styles = StyleSheet.create({
     color: "#000000",
   },
   boton: {
-    fontSize: 55,
     backgroundColor: "#ff6624",
     borderRadius: 5,
     marginVertical: 7,
     paddingHorizontal: 10,
+    paddingVertical: 50,
     height: 50,
   },
   TextoBoton: {
-    fontSize: 23,
+    fontSize: 30,
     textAlign: "center",
     color: "#ffffff",
     fontWeight: "bold",
     marginRight: 10,
     marginTop: 2,
+    paddingHorizontal: 50,
+    paddingVertical: 10,
   },
   input: {
     borderWidth: 2,
@@ -251,6 +302,7 @@ const styles = StyleSheet.create({
   IconInput: {
     flexDirection: "row",
     justifyContent: "space-between",
+    paddingHorizontal: 10,
   },
   boton: {
     backgroundColor: "#ff6624",
@@ -269,7 +321,8 @@ const styles = StyleSheet.create({
     fontSize: 33,
     textAlign: "center",
     color: "#ff6624",
-    paddingTop: 70,
+    paddingTop: 10,
+    paddingHorizontal: 10,
   },
 });
 

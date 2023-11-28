@@ -179,7 +179,7 @@ const RegisterScreen = () => {
                   onPress={() =>
                     //navigation.navigate("Login") &&
                     axios
-                      .post("http://10.1.141.3:4000/api/register", {
+                      .post("http://192.168.31.109:4000/api/register", {
                         curp: curp,
                         nombre: nombre,
                         apellidoP: apellidoP,

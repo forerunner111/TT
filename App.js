@@ -11,13 +11,19 @@ import EntrenadorScreen from "./screens/EntrenadorScreen";
 import ComisionScreen from "./screens/ComisionScreen";
 import tablaejemplo from "./screens/tablaejemplo";
 import JefeScreen from "./screens/JefeScreen";
+import ArbitroScreen from "./screens/ArbitroScreen";
+import SecretarioScreen from "./screens/SecretarioScreen";
 
 const Stack = createStackNavigator();
 
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator
+        screenOptions={({ navigation }) => ({
+          headerLeft: () => <CancelButton onPress={navigation.goBack} />,
+        })}
+      >
         <Stack.Screen
           name="Home"
           component={HomeScreen}
@@ -66,6 +72,16 @@ export default function App() {
         <Stack.Screen
           name="tabla"
           component={tablaejemplo}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Arbitro"
+          component={ArbitroScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Secretario"
+          component={SecretarioScreen}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

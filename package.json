@@ -11,6 +11,7 @@
   "dependencies": {
     "@mantine/core": "^6.0.21",
     "@mantine/hooks": "^6.0.21",
+    "@react-native-async-storage/async-storage": "^1.19.5",
     "@react-native-community/datetimepicker": "7.2.0",
     "@react-navigation/native": "^6.1.8",
     "@react-navigation/stack": "^6.3.18",
@@ -21,6 +22,7 @@
     "expo": "~49.0.12",
     "expo-checkbox": "~2.4.0",
     "expo-status-bar": "~1.6.0",
+    "jwt-decode": "^3.1.2",
     "react": "18.2.0",
     "react-native": "0.72.5",
     "react-native-dropdown-select-list": "^2.0.5",

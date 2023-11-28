@@ -1,11 +1,11 @@
-import { View, Text, ScrollView, TextInput } from "react-native";
+import { View, Text, ScrollView, TextInput, Alert } from "react-native";
 import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StyleSheet } from "react-native";
 import { TouchableOpacity } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { Table, TableWrapper, Row } from "react-native-table-component";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { CheckBox } from "@rneui/themed";
 import { SelectList } from "react-native-dropdown-select-list";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
@@ -16,19 +16,21 @@ import {
   AccordionList,
 } from "accordion-collapse-react-native";
 import { useNavigation } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import jwt_decode from "jwt-decode";
+import axios, { formToJSON } from "axios";
+
+const baseURL = "http://192.168.31.109:4000/api/entrenador";
+//const baseURL = "http://10.1.141.191:4000/api/entrenador";
 
 const EntrenadorScreen = () => {
   const navigation = useNavigation();
-  const [modoEquipoJugador, onChangeModoEquipoJugador] = React.useState(true);
+  const [modoEquipoJugador, onChangeModoEquipoJugador] = useState(true);
   const [nombreEquipo, onChangeNombreEquipo] = useState("");
-  const [selectedIndex, setIndex] = React.useState(0);
+  const [selectedIndex, setIndex] = useState("");
+  const [inscribirEquipo, onChangeInscribirEquipo] = useState(false);
 
   const [selected, setSelected] = React.useState("");
-
-  const data = [
-    { key: "1", value: "Tomateros" },
-    { key: "2", value: "Dodgers" },
-  ];
 
   //nuevo jugador
   const [nombre, onChangeNombre] = useState("");
@@ -36,6 +38,7 @@ const EntrenadorScreen = () => {
   const [telefono, onChangeTelefono] = useState("");
   const [curp, onChangeCURP] = useState("");
   const [numPlayera, onChangeNumPlayera] = useState("");
+  const [BDD, setBDD] = useState("");
   // fecha de nacimiento
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
@@ -48,94 +51,385 @@ const EntrenadorScreen = () => {
   };
 
   const handleConfirm = (date) => {
-    console.warn("A date has been picked: ", date);
+    fecha = JSON.stringify(date).replaceAll('"', "");
+    bien = fecha.substr(0, 10);
+    excelente = bien.substr(8, 9);
+    dia = excelente - 1;
+    todo = fecha.substr(0, 8) + dia;
+    //console.log(todo);
+    setBDD(todo);
     hideDatePicker();
   };
 
+  const [admin, setAdmin] = useState("");
+  const [secre, setSecre] = useState("");
+  const [jefe, setJefe] = useState("");
+  const [arbit, setArbit] = useState("");
+  const [comis, setComis] = useState("");
+  const [entre, setEntre] = useState("");
+
+  const [respuesta, setRespuesta] = useState();
+  const [uID, setUID] = useState();
+  const [usuario, setUsuario] = useState("");
+
+  AsyncStorage.getItem("tusecretosecreto", (err, res) => {
+    decode = jwt_decode(res);
+    setRespuesta(res);
+    setAdmin(JSON.stringify(decode["admin"]));
+    setSecre(JSON.stringify(decode["secretario"]));
+    setJefe(JSON.stringify(decode["jefe"]));
+    setArbit(JSON.stringify(decode["arbitro"]));
+    setComis(JSON.stringify(decode["comision"]));
+    setEntre(JSON.stringify(decode["entrenador"]));
+    setUID("/" + JSON.stringify(decode["uID"]).replaceAll('"', ""));
+    setUsuario(JSON.stringify(decode["uID"]).replaceAll('"', ""));
+  });
+  //console.log(usuario);
+  const [data, setData] = useState("");
+  const [configt, setConfigt] = useState();
+  const fetchData = async () => {
+    try {
+      const token = respuesta.replaceAll('"', "");
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      setConfigt(config);
+      const response = await axios.get(baseURL + uID, config);
+      //const respuestaJugadores = await axios.get(baseURL + "/987");
+      /// setDataJugadores(respuestaJugadores);
+      setData(response.data);
+      //console.log(response.data);
+    } catch (error) {
+      console.log("Error ", error);
+    }
+  };
+  // console.log(JSON.stringify(data["respuesta"]["jugadores"]));
+
+  useEffect(() => {
+    fetchData();
+  }, [uID]);
+
+  this.state = {
+    tableHeadequi: ["Nombre", "Rama", "Estatus"],
+    widthArrequi: [200, 50, 200],
+    tableHeadeJugadores: [
+      "Nombre",
+      "Apellido",
+      "Equipo",
+      "Rama",
+      "No. Playera",
+      "Fecha de nacimiento",
+    ],
+    widthArrJugadores: [100, 100, 100, 50, 50, 100],
+  };
+  //tabla
+  const tableDataequi = [];
+
+  //desplegable nuevo jugador
+  const datar = [];
+
+  if (data == "") {
+  } else {
+    usuarios = JSON.stringify(data["respuesta"]["equipos"]);
+    num = JSON.parse(usuarios).length;
+    //console.log(num);
+    for (let i = 0; i < num; i++) {
+      const rowDataequi = [];
+      datar.push({
+        key: JSON.stringify(data["respuesta"]["equipos"][i]["idEquipo"]),
+        value: JSON.stringify(
+          data["respuesta"]["equipos"][i]["nombreEqu"]
+        ).replaceAll('"', ""),
+      });
+      for (let j = 0; j < 3; j++) {
+        rowDataequi.push(
+          JSON.stringify(data["respuesta"]["equipos"][i]["nombreEqu"])
+        );
+        rowDataequi.push(
+          JSON.stringify(data["respuesta"]["equipos"][i]["rama"])
+        );
+        if (
+          JSON.stringify(data["respuesta"]["equipos"][i]["equiValidado"]) ==
+          '"S"'
+        ) {
+          rowDataequi.push("Validado");
+        } else if (
+          JSON.stringify(data["respuesta"]["equipos"][i]["equiValidado"]) ==
+          '"N"'
+        ) {
+          rowDataequi.push("Rechazado");
+        } else {
+          rowDataequi.push("Esperando Validacion");
+        }
+      }
+      tableDataequi.push(rowDataequi);
+    }
+  }
+
+  const tableDatajugadores = [];
+  if (data == "") {
+  } else {
+    jugadores = JSON.stringify(data["respuesta"]["jugadores"]);
+    num = JSON.parse(jugadores).length;
+    console.log(jugadores);
+
+    for (let i = 0; i < num; i++) {
+      const rowDataJugadores = [];
+      for (let j = 0; j < 6; j++) {
+        rowDataJugadores.push(
+          JSON.stringify(data["respuesta"]["jugadores"][i]["nombreUsu"])
+        );
+        rowDataJugadores.push(
+          JSON.stringify(data["respuesta"]["jugadores"][i]["apellidoP"])
+        );
+        rowDataJugadores.push(
+          JSON.stringify(data["respuesta"]["jugadores"][i]["nombreEqu"])
+        );
+        rowDataJugadores.push(
+          JSON.stringify(data["respuesta"]["jugadores"][i]["sexo"])
+        );
+        rowDataJugadores.push(
+          JSON.stringify(data["respuesta"]["jugadores"][i]["numeroJug"])
+        );
+        rowDataJugadores.push(
+          JSON.stringify(data["respuesta"]["jugadores"][i]["fechaNac"]).substr(
+            0,
+            11
+          ) + '"'
+        );
+      }
+      tableDatajugadores.push(rowDataJugadores);
+    }
+  }
+  //console.log(JSON.stringify(data));
+
   return (
     <SafeAreaView>
+      <View>
+        <View style={styles.IconInput}>
+          <TouchableOpacity
+            onPress={() =>
+              AsyncStorage.clear()
+                .then(function (response) {
+                  console.log(response);
+                  navigation.reset({
+                    index: 0,
+                    routes: [{ name: "Home" }],
+                  });
+                })
+                .catch(function (error) {
+                  console.log("", "Ocurrio un error");
+                })
+            }
+          >
+            <Ionicons name="exit" size={35} color="#000000" />
+          </TouchableOpacity>
+
+          <Text style={styles.titulo}>Entrenador</Text>
+          <Text></Text>
+          <Text></Text>
+        </View>
+      </View>
       <ScrollView>
+        <View padding={10}>
+          <Collapse>
+            <CollapseHeader style={styles.menucol}>
+              <View>
+                <Ionicons name="person" size={35} color="#000000" />
+              </View>
+            </CollapseHeader>
+            <CollapseBody style={styles.menucol}>
+              <View>
+                {admin == 0 ? ( //Modificar esta parte cuando se tenga la pantalla de secretario
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate("Admin")}
+                  >
+                    <Text style={styles.textcol}>Administrador</Text>
+                  </TouchableOpacity>
+                ) : (
+                  <View></View>
+                )}
+              </View>
+              <View>
+                {jefe == 2 ? (
+                  <TouchableOpacity onPress={() => navigation.navigate("Jefe")}>
+                    <Text style={styles.textcol}>Jefe de Arbitros</Text>
+                  </TouchableOpacity>
+                ) : (
+                  <View></View>
+                )}
+              </View>
+              <View>
+                {arbit == 3 ? (
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate("Arbitro")}
+                  >
+                    <Text style={styles.textcol}>Arbitro</Text>
+                  </TouchableOpacity>
+                ) : (
+                  <View></View>
+                )}
+              </View>
+              <View>
+                {comis == 4 ? (
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate("Comision")}
+                  >
+                    <Text style={styles.textcol}>Comision diciplinaria</Text>
+                  </TouchableOpacity>
+                ) : (
+                  <View></View>
+                )}
+              </View>
+              <View>
+                {entre == 5 ? (
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate("Entrenador")}
+                  >
+                    <Text style={styles.textcol}>Entrenador</Text>
+                  </TouchableOpacity>
+                ) : (
+                  <View></View>
+                )}
+              </View>
+            </CollapseBody>
+          </Collapse>
+        </View>
         <View>
-          <View style={styles.IconInput}>
-            <TouchableOpacity>
-              <Ionicons name="exit" size={35} color="#000000" />
-            </TouchableOpacity>
-
-            <Text style={styles.titulo}>Entrenador</Text>
-            <Text></Text>
-            <Text></Text>
-          </View>
-
-          <View padding={10}>
-            <Collapse>
-              <CollapseHeader style={styles.menucol}>
-                <View>
-                  <Ionicons name="person" size={35} color="#000000" />
-                </View>
-              </CollapseHeader>
-              <CollapseBody style={styles.menucol}>
-                <TouchableOpacity onPress={() => navigation.navigate("Admin")}>
-                  <Text style={styles.textcol}>Administrador</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => navigation.navigate("Entrenador")}
-                >
-                  <Text style={styles.textcol}>Entrenador</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => navigation.navigate("Comision")}
-                >
-                  <Text style={styles.textcol}>Comision diciplinaria</Text>
-                </TouchableOpacity>
-              </CollapseBody>
-            </Collapse>
-          </View>
-
           <Text style={styles.Subtitulo}>Equipos inscritos</Text>
           <View alignItems="space-between" marginRight={10}>
             <TouchableOpacity
               style={styles.boton}
-              onPress={() => onChangeModoEquipoJugador(true)}
+              onPress={() => onChangeInscribirEquipo(true)}
             >
               <Text style={styles.TextoBoton} marginVertical={5}>
                 Nuevo Equipo
               </Text>
             </TouchableOpacity>
           </View>
-          <View>
+          {
+            //Tabla Equipos inscritos
+          }
+          <View paddingHorizontal={10}>
             <ScrollView horizontal={true}>
-              <View paddingHorizontal={10}>
+              <View>
                 <Table borderStyle={{ borderWidth: 1, borderColor: "#000000" }}>
                   <Row
-                    data={["Nombre", "Rama", "Num. Torneo", "Estatus"]}
-                    widthArr={[150, 50, 50, 150]}
+                    data={state.tableHeadequi}
+                    widthArr={state.widthArrequi}
                     style={styles.header}
                     textStyle={styles.text}
                   />
                 </Table>
-                <ScrollView>
-                  <Table
-                    borderStyle={{ borderWidth: 1, borderColor: "#000000" }}
-                  >
+
+                <Table borderStyle={{ borderWidth: 1, borderColor: "#000000" }}>
+                  {tableDataequi.map((rowDataequi, index) => (
                     <Row
-                      data={[["Dodgers"], ["V"], ["1"], ["Validado"]]}
-                      widthArr={[150, 50, 50, 150]}
-                      style={styles.row}
+                      key={index}
+                      data={rowDataequi}
+                      widthArr={state.widthArrequi}
+                      style={[
+                        styles.row,
+                        index % 2 && { backgroundColor: "#F7F6E7" },
+                      ]}
                       textStyle={styles.text}
                     />
-                    <Row
-                      data={[["Tomateros"], ["V"], ["1"], ["Rechazado"]]}
-                      widthArr={[150, 50, 50, 150]}
-                      style={styles.row}
-                      textStyle={styles.text}
-                    />
-                  </Table>
-                </ScrollView>
+                  ))}
+                </Table>
               </View>
             </ScrollView>
           </View>
+          {
+            //Fin tabla Equipos inscritos
+          }
+          {inscribirEquipo ? (
+            <View>
+              <Text style={styles.Subtitulo}>Inscripcion de Equipo</Text>
+              <View style={styles.container2}>
+                <Text style={styles.TextoLabels}>Nombre de Equipo</Text>
+                <TextInput
+                  style={styles.input}
+                  onChangeText={onChangeNombreEquipo}
+                  value={nombreEquipo}
+                  placeholder="Nombre del equipo"
+                />
+                <Text style={styles.TextoLabels}>Rama</Text>
+                <View>
+                  <CheckBox
+                    checked={selectedIndex == "M"}
+                    onPress={() => setIndex("M")}
+                    iconType="material-community"
+                    checkedIcon="radiobox-marked"
+                    uncheckedIcon="radiobox-blank"
+                    title={"Masculino"}
+                  />
+                  <CheckBox
+                    checked={selectedIndex == "F"}
+                    onPress={() => setIndex("F")}
+                    iconType="material-community"
+                    checkedIcon="radiobox-marked"
+                    uncheckedIcon="radiobox-blank"
+                    title={"Femenino"}
+                  />
+                </View>
+                <View
+                  alignItems="space-between"
+                  marginRight={10}
+                  style={styles.IconInput}
+                >
+                  <TouchableOpacity
+                    style={styles.boton}
+                    onPress={() =>
+                      onChangeInscribirEquipo(false) &&
+                      onChangeNombreEquipo("") &&
+                      setIndex("")
+                    }
+                  >
+                    <Text style={styles.TextoBoton} marginVertical={5}>
+                      Cerrar
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.boton}
+                    onPress={() =>
+                      axios
+                        .post(
+                          baseURL + "/equipo",
+                          {
+                            nombre: nombreEquipo,
+                            rama: selectedIndex,
+                            idEntrenador: usuario,
+                          },
+                          configt
+                        )
+                        .then(function (response) {
+                          console.log(response);
+                          console.log(uID);
+                          Alert.alert("", "Usuuario creado con exito");
+                          onChangeInscribirEquipo(false);
+                          onChangeNombreEquipo("");
+                          setIndex("");
+                          fetchData();
+                        })
+                        .catch(function (error) {
+                          console.log(error);
+                        })
+                    }
+                  >
+                    <Text style={styles.TextoBoton} marginVertical={5}>
+                      Inscribir Equipo
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+          ) : (
+            <View></View>
+          )}
           <Text style={styles.Subtitulo} paddingTop={15}>
-            CRUD Miembros de Equipo
+            Miembros de Equipo
           </Text>
           <View alignItems="space-between" marginRight={10}>
             <TouchableOpacity
@@ -148,107 +442,59 @@ const EntrenadorScreen = () => {
             </TouchableOpacity>
           </View>
           <View>
-            <View style={styles.rowinput} paddingHorizontal={10}>
-              <TouchableOpacity style={styles.boton2}>
-                <Text style={styles.TextoBoton} marginVertical={5}>
-                  Tomateros
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.boton2}>
-                <Text style={styles.TextoBoton}>Dodgers</Text>
-              </TouchableOpacity>
-            </View>
-            <View>
+            {/*Tabla jugadores */}
+            <View paddingHorizontal={10}>
               <ScrollView horizontal={true}>
-                <View paddingHorizontal={10}>
+                <View>
                   <Table
                     borderStyle={{ borderWidth: 1, borderColor: "#000000" }}
                   >
                     <Row
-                      data={["Nombre", "Telefono", "Num. playera", "Acciones"]}
-                      widthArr={[150, 150, 50, 150]}
+                      data={state.tableHeadeJugadores}
+                      widthArr={state.widthArrJugadores}
                       style={styles.header}
                       textStyle={styles.text}
                     />
                   </Table>
-                  <ScrollView>
-                    <Table
-                      borderStyle={{ borderWidth: 1, borderColor: "#000000" }}
-                    >
+
+                  <Table
+                    borderStyle={{ borderWidth: 1, borderColor: "#000000" }}
+                  >
+                    {tableDatajugadores.map((rowDataJugadores, index) => (
                       <Row
-                        data={[
-                          ["Juan Pedro"],
-                          ["4567891235"],
-                          ["1"],
-                          ["Validado"],
+                        key={index}
+                        data={rowDataJugadores}
+                        widthArr={state.widthArrJugadores}
+                        style={[
+                          styles.row,
+                          index % 2 && { backgroundColor: "#F7F6E7" },
                         ]}
-                        widthArr={[150, 150, 50, 150]}
-                        style={styles.row}
                         textStyle={styles.text}
                       />
-                      <Row
-                        data={[["Rene"], ["3692581478"], ["12"], ["Rechazado"]]}
-                        widthArr={[150, 150, 50, 150]}
-                        style={styles.row}
-                        textStyle={styles.text}
-                      />
-                    </Table>
-                  </ScrollView>
+                    ))}
+                  </Table>
                 </View>
               </ScrollView>
             </View>
+            {/*Fin tabla jugadores*/}
           </View>
           <View>
             {modoEquipoJugador ? (
-              <View>
-                <Text style={styles.Subtitulo}>Inscripcion de Equipo</Text>
-                <View style={styles.container2}>
-                  <Text style={styles.TextoLabels}>Nombre de Equipo</Text>
-                  <TextInput
-                    style={styles.input}
-                    onChangeText={onChangeNombreEquipo}
-                    value={nombreEquipo}
-                    placeholder="Nombre del equipo"
-                  />
-                  <Text style={styles.TextoLabels}>Rama</Text>
-                  <View>
-                    <CheckBox
-                      checked={selectedIndex === 0}
-                      onPress={() => setIndex(0)}
-                      iconType="material-community"
-                      checkedIcon="radiobox-marked"
-                      uncheckedIcon="radiobox-blank"
-                      title={"Masculino"}
-                    />
-                    <CheckBox
-                      checked={selectedIndex === 1}
-                      onPress={() => setIndex(1)}
-                      iconType="material-community"
-                      checkedIcon="radiobox-marked"
-                      uncheckedIcon="radiobox-blank"
-                      title={"Femenino"}
-                    />
-                  </View>
-                  <View alignItems="space-between" marginRight={10}>
-                    <TouchableOpacity style={styles.boton}>
-                      <Text style={styles.TextoBoton} marginVertical={5}>
-                        Inscribir Equipo
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
-                </View>
-              </View>
+              <View></View>
             ) : (
               <View>
                 <Text style={styles.Subtitulo}>Inscribir jugadores</Text>
                 <View style={styles.container2}>
                   <Text style={styles.TextoLabels}>Equipo</Text>
-                  <SelectList
-                    setSelected={(val) => setSelected(val)}
-                    data={data}
-                    save="value"
-                    placeholder="Seleccionar equipo"
-                  />
+                  {
+                    <SelectList
+                      setSelected={(val) => setSelected(val)}
+                      data={datar}
+                      save="key"
+                      placeholder="Seleccionar equipo"
+                      search={false}
+                    />
+                  }
                   <Text style={styles.TextoLabels}>Nombre</Text>
                   <TextInput
                     style={styles.input}
@@ -275,16 +521,16 @@ const EntrenadorScreen = () => {
                   <Text style={styles.TextoLabels}>Sexo</Text>
                   <View>
                     <CheckBox
-                      checked={selectedIndex === 0}
-                      onPress={() => setIndex(0)}
+                      checked={selectedIndex === "M"}
+                      onPress={() => setIndex("M")}
                       iconType="material-community"
                       checkedIcon="radiobox-marked"
                       uncheckedIcon="radiobox-blank"
                       title={"Masculino"}
                     />
                     <CheckBox
-                      checked={selectedIndex === 1}
-                      onPress={() => setIndex(1)}
+                      checked={selectedIndex === "F"}
+                      onPress={() => setIndex("F")}
                       iconType="material-community"
                       checkedIcon="radiobox-marked"
                       uncheckedIcon="radiobox-blank"
@@ -318,13 +564,71 @@ const EntrenadorScreen = () => {
                     maxLength={2}
                     keyboardType="numeric"
                   />
-                  <View style={styles.boton}>
-                    <TouchableOpacity /*onPress={() => navigation.navigate("Home")}*/
+                  <View
+                    alignItems="space-between"
+                    marginRight={10}
+                    style={styles.IconInput}
+                  >
+                    <TouchableOpacity
+                      style={styles.boton}
+                      onPress={() =>
+                        onChangeModoEquipoJugador(true) &&
+                        onChangeCURP("") &&
+                        onChangeApellidoP("") &&
+                        onChangeNombre("") &&
+                        onChangeNumPlayera("") &&
+                        setBDD("") &&
+                        setSelected("") &&
+                        setIndex("")
+                      }
                     >
                       <Text style={styles.TextoBoton} marginVertical={5}>
-                        Registrar
+                        Cerrar
                       </Text>
                     </TouchableOpacity>
+                    <View style={styles.boton}>
+                      <TouchableOpacity
+                        onPress={() =>
+                          axios
+                            .post(
+                              baseURL + "/jugador",
+                              {
+                                curp: curp,
+                                nombre: nombre,
+                                apellido: apellidoP,
+                                sexo: selectedIndex,
+                                equipo: selected,
+                                numPlayera: numPlayera,
+                                fechaNac: BDD,
+                              },
+                              configt
+                            )
+                            .then(function (response) {
+                              console.log(response);
+                              Alert.alert("", "Usuario creado con exito");
+                              onChangeCURP("");
+                              onChangeApellidoP("");
+                              onChangeNombre("");
+                              onChangeNumPlayera("");
+                              setBDD("");
+                              setSelected("");
+                              setIndex("");
+                              fetchData();
+                            })
+                            .catch(function (error) {
+                              console.log(error);
+                            })
+                        }
+                      >
+                        <Text
+                          style={styles.TextoBoton}
+                          marginVertical={5}
+                          paddingHorizontal={30}
+                        >
+                          Registrar
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
                   </View>
                 </View>
               </View>

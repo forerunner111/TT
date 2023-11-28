@@ -1,16 +1,26 @@
 import { View, Text, TextInput } from "react-native";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { SafeAreaView } from "react-native";
 import { StyleSheet } from "react-native";
-import { TouchableOpacity } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { TouchableOpacity, Alert } from "react-native";
+import { useNavigation, StackActions } from "@react-navigation/native";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import axios from "axios";
+import jwt_decode from "jwt-decode";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+const baseURL = "http://192.168.31.109:4000/api/login";
+//const baseURL = "http://10.1.141.191:4000/api/login";
 
 const LoginScreen = () => {
   const navigation = useNavigation();
   const [email, onChangeEmail] = React.useState("");
   const [Contraseña, onChangePassword] = React.useState("");
   const [modoPassword, onChangemodoPassword] = React.useState(true);
+  const [Token, setToken] = useState("");
+  const [decode, setDecode] = useState("");
+
+  const Navegar = ([]) => {};
 
   return (
     <SafeAreaView style={styles.container}>
@@ -47,11 +57,111 @@ const LoginScreen = () => {
           </View>
           <TouchableOpacity
             style={styles.boton}
-            onPress={() => navigation.navigate("Admin")}
+            onPress={() =>
+              axios
+                .post(baseURL, {
+                  email: email,
+                  contrasena: Contraseña,
+                })
+                .then(function (response) {
+                  clave = JSON.stringify(response["data"]["token"]);
+                  AsyncStorage.setItem("tusecretosecreto", clave);
+                  const decode = jwt_decode(clave);
+                  const admin = JSON.stringify(decode["admin"]);
+                  const secretario = JSON.stringify(decode["secretario"]);
+                  const jefe = JSON.stringify(decode["jefe"]);
+                  const comision = JSON.stringify(decode["comision"]);
+                  const arbitro = JSON.stringify(decode["arbitro"]);
+                  const entrenador = JSON.stringify(decode["entrenador"]);
+
+                  const num = [];
+                  if (admin != "null") {
+                    num.push(admin);
+                  }
+                  if (secretario != "null") {
+                    num.push(secretario);
+                  }
+                  if (jefe != "null") {
+                    num.push(jefe);
+                  }
+                  if (comision != "null") {
+                    num.push(comision);
+                  }
+                  if (arbitro != "null") {
+                    num.push(arbitro);
+                  }
+                  if (entrenador != "null") {
+                    num.push(entrenador);
+                  }
+                  console.log(num);
+                  let minimo = 99;
+                  //console.log(Math.min.apply(null, num));
+
+                  for (i = 0; i <= num.length; i++) {
+                    if (minimo >= num[i]) {
+                      minimo = num[i];
+                    }
+                  }
+                  console.log(minimo);
+                  switch (minimo) {
+                    case "0":
+                      navigation.reset({
+                        index: 0,
+                        routes: [{ name: "Admin" }],
+                      });
+                      navigation.navigate("Admin");
+                      break;
+                    case "1":
+                      navigation.reset({
+                        index: 0,
+                        routes: [{ name: "Secretario" }],
+                      });
+                      navigation.navigate("Secretario");
+                      break;
+                    case "2":
+                      navigation.reset({
+                        index: 0,
+                        routes: [{ name: "Jefe" }],
+                      });
+                      navigation.navigate("jefe");
+                      break;
+                    case "3":
+                      navigation.reset({
+                        index: 0,
+                        routes: [{ name: "Arbitro" }],
+                      });
+                      navigation.navigate("Arbitro");
+                      break;
+                    case "4":
+                      navigation.reset({
+                        index: 0,
+                        routes: [{ name: "Comision" }],
+                      });
+                      navigation.navigate("Comision");
+                      break;
+                    case "5":
+                      navigation.reset({
+                        index: 0,
+                        routes: [{ name: "Entrenador" }],
+                      });
+                      navigation.navigate("Entrenador");
+                      break;
+
+                    default:
+                      Alert.alert("Error:", "Ocurrio un error");
+                      break;
+                  }
+                  // console.log(clave);
+                })
+                .catch(function (error) {
+                  console.log(error);
+                  //Alert.alert("Error: ", JSON.stringify(error["message"]));
+                })
+            }
           >
             <Text style={styles.TextoBoton}>Iniciar sesión</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate("tabla")}>
+          <TouchableOpacity onPress={() => navigation.navigate("Home")}>
             <Text style={styles.TextoBoton2}>Regresar </Text>
           </TouchableOpacity>
         </View>

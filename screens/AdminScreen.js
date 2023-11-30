@@ -368,7 +368,7 @@ const AdminScreen = () => {
                   <TouchableOpacity
                     onPress={() => navigation.navigate("Comision")}
                   >
-                    <Text style={styles.textcol}>Comision diciplinaria</Text>
+                    <Text style={styles.textcol}>Comision disciplinaria</Text>
                   </TouchableOpacity>
                 ) : (
                   <View></View>

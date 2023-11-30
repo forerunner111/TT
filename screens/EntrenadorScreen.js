@@ -60,7 +60,7 @@ const EntrenadorScreen = () => {
     setBDD(todo);
     hideDatePicker();
   };
-
+  //menu desplegable
   const [admin, setAdmin] = useState("");
   const [secre, setSecre] = useState("");
   const [jefe, setJefe] = useState("");
@@ -253,6 +253,17 @@ const EntrenadorScreen = () => {
                 )}
               </View>
               <View>
+                {secre == 1 ? ( //Modificar esta parte cuando se tenga la pantalla de secretario
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate("Secretario")}
+                  >
+                    <Text style={styles.textcol}>Secretario de liga </Text>
+                  </TouchableOpacity>
+                ) : (
+                  <View></View>
+                )}
+              </View>
+              <View>
                 {jefe == 2 ? (
                   <TouchableOpacity onPress={() => navigation.navigate("Jefe")}>
                     <Text style={styles.textcol}>Jefe de Arbitros</Text>
@@ -277,18 +288,7 @@ const EntrenadorScreen = () => {
                   <TouchableOpacity
                     onPress={() => navigation.navigate("Comision")}
                   >
-                    <Text style={styles.textcol}>Comision diciplinaria</Text>
-                  </TouchableOpacity>
-                ) : (
-                  <View></View>
-                )}
-              </View>
-              <View>
-                {entre == 5 ? (
-                  <TouchableOpacity
-                    onPress={() => navigation.navigate("Entrenador")}
-                  >
-                    <Text style={styles.textcol}>Entrenador</Text>
+                    <Text style={styles.textcol}>Comision disciplinaria</Text>
                   </TouchableOpacity>
                 ) : (
                   <View></View>

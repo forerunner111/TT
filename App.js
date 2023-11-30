@@ -13,6 +13,7 @@ import tablaejemplo from "./screens/tablaejemplo";
 import JefeScreen from "./screens/JefeScreen";
 import ArbitroScreen from "./screens/ArbitroScreen";
 import SecretarioScreen from "./screens/SecretarioScreen";
+import { View, Text } from "react-native";
 
 const Stack = createStackNavigator();
 
@@ -64,6 +65,7 @@ export default function App() {
           component={ComisionScreen}
           options={{ headerShown: false }}
         />
+
         <Stack.Screen
           name="Jefe"
           component={JefeScreen}

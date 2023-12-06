@@ -26,9 +26,12 @@ import jwt_decode from "jwt-decode";
 import axios, { formToJSON } from "axios";
 
 const baseURL = "http://192.168.31.109:4000/api/secretario";
+//const baseURL = "http://10.1.141.191:4000/api/secretario";
 
 const SecretarioScreen = () => {
   const navigation = useNavigation();
+
+  const [newTorneo, onChangeTorneo] = useState(true);
 
   const [admin, setAdmin] = useState("");
   const [secre, setSecre] = useState("");
@@ -52,7 +55,7 @@ const SecretarioScreen = () => {
 
   //console.log(respuesta);
   //obtener datos para la tabla validacion de equipos
-  const [datosValidar, setDatosValidar] = useState("");
+  const [data, setData] = useState("");
   const [configt, setConfigt] = useState();
   // const [sid, setId] = useState();
   const fetchData = async () => {
@@ -65,7 +68,7 @@ const SecretarioScreen = () => {
       };
       setConfigt(config);
       const response = await axios.get(baseURL, config);
-      setDatosValidar(response.data);
+      setData(response.data);
       // console.log(response.data);
     } catch (error) {
       console.log("Error ", error);
@@ -76,7 +79,332 @@ const SecretarioScreen = () => {
     fetchData();
   }, [respuesta]);
 
-  console.log(JSON.stringify(datosValidar["respuesta"]["equipos"]));
+  this.state = {
+    tableHeadValidacion: ["Equipo", "Rama", "Entrenador", "Validar"],
+    widthArrValidacion: [200, 200, 100, 100],
+    tableHeadHorarios: [
+      "Vuelta",
+      "Rama",
+      "Partido",
+      "Fecha",
+      "Hora",
+      "Acciones",
+    ],
+    widthArrHorarios: [100, 100, 200, 200, 100, 120],
+    widthArrTorneo: [240, 100],
+    tableHeadTorHis: [
+      "Num. Torneo",
+      "Fecha de Inicio",
+      "Equipos Femeniles",
+      "Equipos Masculinos",
+    ],
+    widthArrTorHis: [100, 100, 100, 100],
+    tableHeadCredencial: ["Jugador", "Equipo", "Credencial"],
+    widthArrCredencial: [200, 150, 100],
+  };
+  //tabla Validacion
+  const tableDataValidacion = [];
+
+  {
+    //Checar la parte de validar y rechazar
+  }
+  if (data == "") {
+  } else {
+    usuarios = JSON.stringify(data["respuesta"]["equipos"]);
+    num = JSON.parse(usuarios).length;
+    // console.log(num);
+    if (num == 0) {
+      tableDataValidacion.push("sin equipos para validar");
+    } else {
+      for (let i = 0; i < num; i++) {
+        const rowData = [];
+        for (let j = 0; j < 4; j++) {
+          rowData.push(
+            JSON.stringify(data["respuesta"]["equipos"][i]["nombreEqu"])
+          );
+          rowData.push(JSON.stringify(data["respuesta"]["equipos"][i]["rama"]));
+          rowData.push(
+            JSON.stringify(
+              data["respuesta"]["equipos"][i]["nombreUsu"] +
+                " " +
+                data["respuesta"]["equipos"][i]["apellidoP"]
+            )
+          );
+          let identy = JSON.stringify(
+            data["respuesta"]["equipos"][i]["idEquipo"]
+          ).replaceAll('"', "");
+          // console.log(identy);
+          rowData.push(
+            <View style={styles.IconInput}>
+              <TouchableOpacity
+                onPress={() =>
+                  axios
+                    .post(
+                      baseURL + "/equipo/valido",
+                      {
+                        idEquipo: identy,
+                      },
+                      configt
+                    )
+                    .then(function (response) {
+                      fetchData();
+                      Alert.alert("", "Equipo validado correctamente");
+                    })
+                    .catch(function (error) {
+                      console.log("", "Ocurrio un error");
+                      console.log(error);
+                    })
+                }
+              >
+                <Ionicons
+                  name="checkmark-circle"
+                  size={30}
+                  color="green"
+                  paddingLeft={10}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() =>
+                  Alert.alert(
+                    "Atencion",
+                    "Estas por rechazar a: " +
+                      JSON.stringify(
+                        data["respuesta"]["equipos"][i]["nombreEqu"]
+                      ),
+                    [
+                      {
+                        text: "Cancelar",
+                        // onPress: () => console.log("Cancel Pressed"),
+                        style: "cancel",
+                      },
+                      {
+                        text: "OK",
+
+                        onPress: () =>
+                          axios
+                            .post(
+                              baseURL + "/equipo/invalido",
+                              {
+                                idEquipo: JSON.stringify(
+                                  data["respuesta"]["equipos"][i]["idEquipo"]
+                                ).replaceAll('"', ""),
+                              },
+                              configt
+                            )
+                            .then(function (response) {
+                              fetchData();
+                              Alert.alert("", "Equipo eliminado correctamente");
+                            })
+                            .catch(function (error) {
+                              console.log("", "Ocurrio un error");
+                              console.log(error);
+                            }),
+                      },
+                    ]
+                  )
+                }
+              >
+                <Ionicons name="close-circle" size={30} color="red" />
+              </TouchableOpacity>
+            </View>
+          );
+        }
+        tableDataValidacion.push(rowData);
+      }
+    }
+  }
+
+  //tabla Horarios
+  const tableDataHorarios = [];
+
+  if (data == "") {
+  } else {
+    usuarios = JSON.stringify(data["respuesta"]["cronograma"]);
+    num = JSON.parse(usuarios).length;
+    //console.log(num);
+
+    for (let i = 0; i < num; i++) {
+      const rowData = [];
+      for (let j = 0; j < 6; j++) {
+        rowData.push(
+          JSON.stringify(data["respuesta"]["cronograma"][i]["vuelta"])
+        );
+        rowData.push(
+          JSON.stringify(data["respuesta"]["cronograma"][i]["rama"])
+        );
+        rowData.push(
+          JSON.stringify(
+            data["respuesta"]["cronograma"][i]["equipoA"] +
+              " VS " +
+              data["respuesta"]["cronograma"][i]["equipoB"]
+          )
+        );
+        rowData.push(
+          JSON.stringify(data["respuesta"]["cronograma"][i]["fechaEnc"]).substr(
+            0,
+            11
+          ) + '"'
+        );
+        rowData.push(
+          JSON.stringify(data["respuesta"]["cronograma"][i]["hora"])
+        );
+        rowData.push(
+          <View style={styles.IconInput}>
+            <TouchableOpacity>
+              <Ionicons
+                name="swap-vertical"
+                size={30}
+                color="black"
+                paddingLeft={1}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity>
+              <Ionicons
+                name="ios-backspace"
+                size={30}
+                color="#00a4d3"
+                paddingLeft={1}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity>
+              <Ionicons
+                name="checkmark-circle"
+                size={30}
+                color="green"
+                paddingLeft={1}
+              />
+            </TouchableOpacity>
+          </View>
+        );
+      }
+      tableDataHorarios.push(rowData);
+    }
+  }
+
+  const rowInfoTorneo = [
+    "Numero maximo de equipos por entrenador",
+    "Numero maximo de jugadores por equipo",
+    "Numero minimo de jugadores por equipo",
+    "Numero maximo de equipos por torneo",
+    "Numero minimo de equipos por torneo",
+    "Numero de dias antes del torneo para registrarse",
+  ];
+  const [maxEntre, onChangeMaxEntre] = useState("");
+  const [maxJugadoresEquipo, onChangeMaxJugadoresEquipo] = useState("");
+  const [minJugadoresEquipo, onChangeMinJugadoresEquipo] = useState("");
+  const [maxEquTorneo, onChangeMaxEquTorneo] = useState("");
+  const [minEquTorneo, onChangeMinEquTorneo] = useState("");
+  const [diasAntes, onChangeDiasAntes] = useState("");
+
+  const sets = [
+    onChangeMaxEntre,
+    onChangeMaxJugadoresEquipo,
+    onChangeMinJugadoresEquipo,
+    onChangeMaxEquTorneo,
+    onChangeMinEquTorneo,
+    onChangeDiasAntes,
+  ];
+
+  const values = [
+    maxEntre,
+    maxJugadoresEquipo,
+    minJugadoresEquipo,
+    maxEquTorneo,
+    minEquTorneo,
+    diasAntes,
+  ];
+
+  //tabla Horarios
+  const tableinfoTorneo = [];
+  for (let i = 0; i < 6; i++) {
+    const rowData = [];
+    for (let j = 0; j < 2; j++) {
+      rowData.push(rowInfoTorneo[i]);
+      rowData.push(
+        <View>
+          <TextInput
+            style={styles.input}
+            onChangeText={sets[i]}
+            value={values[i]}
+            placeholder="##"
+            keyboardType="numeric"
+            maxLength={2}
+          />
+        </View>
+      );
+    }
+    tableinfoTorneo.push(rowData);
+  }
+
+  // tabla Torneos
+  const tableDataTorneos = [];
+
+  if (data == "") {
+  } else {
+    usuarios = JSON.stringify(data["respuesta"]["torneo"]);
+    num = JSON.parse(usuarios).length;
+    //console.log(usuarios);
+
+    for (let i = 0; i < num; i++) {
+      const rowData = [];
+      for (let j = 0; j < 4; j++) {
+        rowData.push(
+          JSON.stringify(data["respuesta"]["torneo"][i]["idTorneo"])
+        );
+        rowData.push(
+          JSON.stringify(data["respuesta"]["torneo"][i]["fechaIniTor"]).substr(
+            0,
+            11
+          ) + '"'
+        );
+        rowData.push(
+          JSON.stringify(data["respuesta"]["torneo2"][i]["EquiposFemeninos"])
+        );
+        rowData.push(
+          JSON.stringify(data["respuesta"]["torneo2"][i]["EquiposMasculinos"])
+        );
+      }
+      tableDataTorneos.push(rowData);
+    }
+  }
+
+  //credenciales
+  const tableDataCredencial = [];
+  if (data == "") {
+  } else {
+    usuarios = JSON.stringify(data["respuesta"]["jugadores"]);
+    num = JSON.parse(usuarios).length;
+    console.log(num);
+
+    for (let i = 0; i < num; i++) {
+      const rowData = [];
+      for (let j = 0; j < 4; j++) {
+        rowData.push(
+          '"' +
+            JSON.stringify(
+              data["respuesta"]["jugadores"][i]["apellidoP"]
+            ).replaceAll('"', "") +
+            " " +
+            JSON.stringify(data["respuesta"]["jugadores"][i]["nombre"]).replace(
+              '"',
+              ""
+            )
+        );
+        rowData.push(
+          JSON.stringify(data["respuesta"]["jugadores"][i]["equipo"])
+        );
+        rowData.push(
+          <View alignItems="center">
+            <TouchableOpacity>
+              <Ionicons name="download-outline" size={30} color="black" />
+            </TouchableOpacity>
+          </View>
+        );
+      }
+      tableDataCredencial.push(rowData);
+    }
+  }
+  console.log(JSON.stringify(data["respuesta"]));
 
   return (
     <SafeAreaView style={styles.container}>
@@ -172,6 +500,204 @@ const SecretarioScreen = () => {
           <Text style={styles.Subtitulo} paddingTop={10}>
             Validacion de equipos
           </Text>
+          {
+            //Tabla Equipos inscritos
+          }
+          <View paddingHorizontal={10}>
+            <ScrollView horizontal={true}>
+              <View>
+                <Table borderStyle={{ borderWidth: 1, borderColor: "#000000" }}>
+                  <Row
+                    data={state.tableHeadValidacion}
+                    widthArr={state.widthArrValidacion}
+                    style={styles.header}
+                    textStyle={styles.text}
+                  />
+                </Table>
+
+                <Table borderStyle={{ borderWidth: 1, borderColor: "#000000" }}>
+                  {tableDataValidacion.map((rowData, index) => (
+                    <Row
+                      key={index}
+                      data={rowData}
+                      widthArr={state.widthArrValidacion}
+                      style={[
+                        styles.row,
+                        index % 2 && { backgroundColor: "#F7F6E7" },
+                      ]}
+                      textStyle={styles.text}
+                    />
+                  ))}
+                </Table>
+              </View>
+            </ScrollView>
+          </View>
+          {
+            //Fin tabla Equipos inscritos
+          }
+          <Text style={styles.Subtitulo} paddingTop={10}>
+            Horario de partidos
+          </Text>
+          {
+            //Tabla horario de partidos
+          }
+          <View paddingHorizontal={10}>
+            <ScrollView horizontal={true}>
+              <View>
+                <Table borderStyle={{ borderWidth: 1, borderColor: "#000000" }}>
+                  <Row
+                    data={state.tableHeadHorarios}
+                    widthArr={state.widthArrHorarios}
+                    style={styles.header}
+                    textStyle={styles.text}
+                  />
+                </Table>
+
+                <Table borderStyle={{ borderWidth: 1, borderColor: "#000000" }}>
+                  {tableDataHorarios.map((rowData, index) => (
+                    <Row
+                      key={index}
+                      data={rowData}
+                      widthArr={state.widthArrHorarios}
+                      style={[
+                        styles.row,
+                        index % 2 && { backgroundColor: "#F7F6E7" },
+                      ]}
+                      textStyle={styles.text}
+                    />
+                  ))}
+                </Table>
+              </View>
+            </ScrollView>
+          </View>
+          {
+            //Fin tabla Horario de partidos
+          }
+          <View alignItems="space-between" marginRight={10}>
+            <TouchableOpacity
+              style={styles.boton}
+              onPress={() => onChangeTorneo(false)}
+            >
+              <Text style={styles.TextoBoton} marginVertical={5}>
+                Nuevo torneo
+              </Text>
+            </TouchableOpacity>
+          </View>
+          {newTorneo ? (
+            <View></View>
+          ) : (
+            <View>
+              <Table borderStyle={{ borderWidth: 1, borderColor: "#000000" }}>
+                {tableinfoTorneo.map((rowData, index) => (
+                  <Row
+                    key={index}
+                    data={rowData}
+                    widthArr={state.widthArrTorneo}
+                    style={[
+                      styles.row,
+                      index % 2 && { backgroundColor: "#F7F6E7" },
+                    ]}
+                    textStyle={styles.text}
+                  />
+                ))}
+              </Table>
+              <View
+                alignItems="space-between"
+                marginRight={10}
+                style={styles.IconInput}
+              >
+                <TouchableOpacity
+                  style={styles.boton}
+                  onPress={() => onChangeTorneo(true)}
+                >
+                  <Text style={styles.TextoBoton} margin={5}>
+                    Cerrar
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.boton}>
+                  <Text style={styles.TextoBoton} marginVertical={5}>
+                    Crear Torneo
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          )}
+          <Text style={styles.Subtitulo} paddingTop={10}>
+            Torneos
+          </Text>
+          {
+            //Tabla Equipos inscritos
+          }
+          <View paddingHorizontal={10}>
+            <ScrollView horizontal={true}>
+              <View>
+                <Table borderStyle={{ borderWidth: 1, borderColor: "#000000" }}>
+                  <Row
+                    data={state.tableHeadTorHis}
+                    widthArr={state.widthArrTorHis}
+                    style={styles.header}
+                    textStyle={styles.text}
+                  />
+                </Table>
+
+                <Table borderStyle={{ borderWidth: 1, borderColor: "#000000" }}>
+                  {tableDataTorneos.map((rowData, index) => (
+                    <Row
+                      key={index}
+                      data={rowData}
+                      widthArr={state.widthArrTorHis}
+                      style={[
+                        styles.row,
+                        index % 2 && { backgroundColor: "#F7F6E7" },
+                      ]}
+                      textStyle={styles.text}
+                    />
+                  ))}
+                </Table>
+              </View>
+            </ScrollView>
+          </View>
+          {
+            //Fin tabla Torneo
+          }
+          <Text style={styles.Subtitulo} paddingTop={10}>
+            Credenciales de Jugadores
+          </Text>
+          {
+            //Tabla Credenciales
+          }
+          <View paddingHorizontal={10}>
+            <ScrollView horizontal={true}>
+              <View>
+                <Table borderStyle={{ borderWidth: 1, borderColor: "#000000" }}>
+                  <Row
+                    data={state.tableHeadCredencial}
+                    widthArr={state.widthArrCredencial}
+                    style={styles.header}
+                    textStyle={styles.text}
+                  />
+                </Table>
+
+                <Table borderStyle={{ borderWidth: 1, borderColor: "#000000" }}>
+                  {tableDataCredencial.map((rowData, index) => (
+                    <Row
+                      key={index}
+                      data={rowData}
+                      widthArr={state.widthArrCredencial}
+                      style={[
+                        styles.row,
+                        index % 2 && { backgroundColor: "#F7F6E7" },
+                      ]}
+                      textStyle={styles.text}
+                    />
+                  ))}
+                </Table>
+              </View>
+            </ScrollView>
+          </View>
+          {
+            //Fin tabla Equipos inscritos
+          }
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -221,11 +747,7 @@ const styles = StyleSheet.create({
     marginVertical: 2,
   },
   input: {
-    borderWidth: 2,
-    borderLeftWidth: 0,
-    borderRightWidth: 0,
-    borderTopWidth: 0,
-    padding: 5,
+    paddingLeft: 35,
     fontSize: 22,
   },
   section: {
@@ -291,14 +813,7 @@ const styles = StyleSheet.create({
   paragraph: {
     fontSize: 15,
   },
-  input: {
-    borderWidth: 2,
-    borderLeftWidth: 0,
-    borderRightWidth: 0,
-    borderTopWidth: 0,
-    padding: 5,
-    fontSize: 22,
-  },
+
   TextoLabels: {
     color: "#ff6624",
     fontSize: 24,

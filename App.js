@@ -9,11 +9,10 @@ import DrawerNavigation from "./screens/DrawerNavigation";
 import AdminScreen from "./screens/AdminScreen";
 import EntrenadorScreen from "./screens/EntrenadorScreen";
 import ComisionScreen from "./screens/ComisionScreen";
-import tablaejemplo from "./screens/tablaejemplo";
 import JefeScreen from "./screens/JefeScreen";
 import ArbitroScreen from "./screens/ArbitroScreen";
 import SecretarioScreen from "./screens/SecretarioScreen";
-import { View, Text } from "react-native";
+//import tablaejemplo from "./screens/tablaejemplo";
 
 const Stack = createStackNavigator();
 
@@ -71,11 +70,13 @@ export default function App() {
           component={JefeScreen}
           options={{ headerShown: false }}
         />
+        {/*
         <Stack.Screen
           name="tabla"
           component={tablaejemplo}
           options={{ headerShown: false }}
         />
+        */}
         <Stack.Screen
           name="Arbitro"
           component={ArbitroScreen}

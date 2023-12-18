@@ -15,7 +15,7 @@ const HomeScreen = () => {
       <View style={styles.container}>
         <Ionicons name="basketball" size={200} color="#ff6624" />
         <View>
-          <Text style={styles.subtitle}>Que vamos a hacer?</Text>
+          <Text style={styles.subtitle}>¿Qué vamos a hacer?</Text>
           <TouchableOpacity
             style={styles.boton}
             onPress={() => navigation.navigate("Login")}
@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   subtitle: {
-    fontSize: 32,
+    fontSize: 30,
     color: "#38434D",
     fontWeight: "bold",
   },

@@ -9,6 +9,9 @@ import { useState } from "react";
 import Checkbox from "expo-checkbox";
 import axios from "axios";
 
+const baseURL = "http://192.168.31.109:4000/api/register";
+//const baseURL = "http://10.1.141.191:4000/api/register";
+
 const RegisterScreen = () => {
   const navigation = useNavigation();
   const [nombre, onChangeNombre] = useState("");
@@ -41,7 +44,7 @@ const RegisterScreen = () => {
               onValueChange={setComision}
               color={isComision ? "#ff6624" : undefined}
             />
-            <Text style={styles.paragraph}>Comisión Diciplinaria</Text>
+            <Text style={styles.paragraph}>Comisión Disciplinaria</Text>
           </View>
           <View style={styles.section}>
             <Checkbox
@@ -124,7 +127,7 @@ const RegisterScreen = () => {
           <View>
             {isEntrenador ? (
               <View>
-                <Text style={styles.TextoLabels}>Telefono</Text>
+                <Text style={styles.TextoLabels}>Teléfono</Text>
                 <TextInput
                   style={styles.input}
                   onChangeText={onChangeTelefono}
@@ -141,12 +144,12 @@ const RegisterScreen = () => {
                   value={colonia}
                   placeholder="Colonia"
                 />
-                <Text style={styles.TextoLabels}>Direccion</Text>
+                <Text style={styles.TextoLabels}>Dirección</Text>
                 <TextInput
                   style={styles.input}
                   onChangeText={onChangeDireccion}
                   value={direccion}
-                  placeholder="Direccion"
+                  placeholder="Dirección"
                 />
               </View>
             ) : (
@@ -158,12 +161,12 @@ const RegisterScreen = () => {
           <View>
             {isArbitro ? (
               <View>
-                <Text style={styles.TextoLabels}>Numero de arbitro</Text>
+                <Text style={styles.TextoLabels}>Número de árbitro</Text>
                 <TextInput
                   style={styles.input}
                   onChangeText={onChangeNumArbitro}
                   value={numArbitro}
-                  placeholder="Numero de arbitro"
+                  placeholder="##"
                   maxLength={2}
                   keyboardType="numeric"
                 />
@@ -179,7 +182,7 @@ const RegisterScreen = () => {
                   onPress={() =>
                     //navigation.navigate("Login") &&
                     axios
-                      .post("http://192.168.31.109:4000/api/register", {
+                      .post(baseURL, {
                         curp: curp,
                         nombre: nombre,
                         apellidoP: apellidoP,

@@ -346,29 +346,29 @@ const AdminScreen = () => {
               <View>
                 {jefe == 2 ? (
                   <TouchableOpacity onPress={() => navigation.navigate("Jefe")}>
-                    <Text style={styles.textcol}>Jefe de Arbitros</Text>
+                    <Text style={styles.textcol}>Jefe de Árbitros</Text>
                   </TouchableOpacity>
                 ) : (
                   <View></View>
                 )}
               </View>
               <View>
-                {arbit == 3 ? (
+                {/*arbit == 3 ? (
                   <TouchableOpacity
                     onPress={() => navigation.navigate("Arbitro")}
                   >
-                    <Text style={styles.textcol}>Arbitro</Text>
+                    <Text style={styles.textcol}>Árbitro</Text>
                   </TouchableOpacity>
                 ) : (
                   <View></View>
-                )}
+                )*/}
               </View>
               <View>
                 {comis == 4 ? (
                   <TouchableOpacity
                     onPress={() => navigation.navigate("Comision")}
                   >
-                    <Text style={styles.textcol}>Comision disciplinaria</Text>
+                    <Text style={styles.textcol}>Comisión Disciplinaria</Text>
                   </TouchableOpacity>
                 ) : (
                   <View></View>
@@ -573,7 +573,7 @@ const AdminScreen = () => {
                   onValueChange={setIsJefe}
                   color={isJefe ? "#ff6624" : undefined}
                 />
-                <Text style={styles.paragraph}>Jefe de arbitro</Text>
+                <Text style={styles.paragraph}>Jefe de árbitro</Text>
               </View>
               <View style={styles.section}>
                 <Checkbox
@@ -582,7 +582,7 @@ const AdminScreen = () => {
                   onValueChange={setComision}
                   color={isComision ? "#ff6624" : undefined}
                 />
-                <Text style={styles.paragraph}>Comisión Diciplinaria</Text>
+                <Text style={styles.paragraph}>Comisión Disciplinaria</Text>
               </View>
               <View style={styles.section}>
                 <Checkbox
@@ -690,7 +690,7 @@ const AdminScreen = () => {
                       value={colonia}
                       placeholder="Colonia"
                     />
-                    <Text style={styles.TextoLabels}>Direccion</Text>
+                    <Text style={styles.TextoLabels}>Dirección</Text>
                     <TextInput
                       style={styles.input}
                       onChangeText={onChangeDireccion}
@@ -707,12 +707,12 @@ const AdminScreen = () => {
               <View>
                 {isArbitro ? (
                   <View>
-                    <Text style={styles.TextoLabels}>Numero de arbitro</Text>
+                    <Text style={styles.TextoLabels}>Número de árbitro</Text>
                     <TextInput
                       style={styles.input}
                       onChangeText={onChangeNumArbitro}
                       value={numArbitro}
-                      placeholder="Numero de arbitro"
+                      placeholder="##"
                       maxLength={2}
                       keyboardType="numeric"
                     />
@@ -833,7 +833,7 @@ const AdminScreen = () => {
               )}
               {AisEntrenador ? (
                 <View>
-                  <Text style={styles.TextoLabels}>Telefono</Text>
+                  <Text style={styles.TextoLabels}>Teléfono</Text>
                   <TextInput
                     style={styles.input}
                     onChangeText={onChangeATelefono}
@@ -849,12 +849,12 @@ const AdminScreen = () => {
                     value={Acolonia}
                     placeholder="Colonia"
                   />
-                  <Text style={styles.TextoLabels}>Direccion</Text>
+                  <Text style={styles.TextoLabels}>Dirección</Text>
                   <TextInput
                     style={styles.input}
                     onChangeText={onChangeADireccion}
                     value={Adireccion}
-                    placeholder="Direccion"
+                    placeholder="Dirección"
                   />
                 </View>
               ) : (
@@ -863,7 +863,7 @@ const AdminScreen = () => {
 
               {AisArbitro ? (
                 <View>
-                  <Text style={styles.TextoLabels}>Numero de arbitro</Text>
+                  <Text style={styles.TextoLabels}>Número de árbitro</Text>
                   <TextInput
                     style={styles.input}
                     onChangeText={onChangeANumArbitro}

@@ -189,7 +189,7 @@ const ComisionScreen = () => {
             <Ionicons name="exit" size={35} color="#000000" />
           </TouchableOpacity>
 
-          <Text style={styles.titulo}>Comision disciplinaria</Text>
+          <Text style={styles.titulo}>Comisión Disciplinaria</Text>
           <Text></Text>
           <Text></Text>
         </View>
@@ -226,22 +226,22 @@ const ComisionScreen = () => {
             <View>
               {jefe == 2 ? (
                 <TouchableOpacity onPress={() => navigation.navigate("Jefe")}>
-                  <Text style={styles.textcol}>Jefe de Arbitros</Text>
+                  <Text style={styles.textcol}>Jefe de Árbitros</Text>
                 </TouchableOpacity>
               ) : (
                 <View></View>
               )}
             </View>
             <View>
-              {arbit == 3 ? (
+              {/*arbit == 3 ? (
                 <TouchableOpacity
                   onPress={() => navigation.navigate("Arbitro")}
                 >
-                  <Text style={styles.textcol}>Arbitro</Text>
+                  <Text style={styles.textcol}>Árbitro</Text>
                 </TouchableOpacity>
               ) : (
                 <View></View>
-              )}
+              )*/}
             </View>
             <View>
               {entre == 5 ? (
@@ -284,7 +284,7 @@ const ComisionScreen = () => {
         <View>
           <View style={styles.section}>
             <Ionicons name="square" size={35} color="green" />
-            <Text> Tecnica </Text>
+            <Text> Técnica </Text>
             <Ionicons name="square" size={35} color="purple" paddingLeft={10} />
             <Text> Antideportiva </Text>
           </View>

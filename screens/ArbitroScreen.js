@@ -7,7 +7,7 @@ import { StyleSheet } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Table, TableWrapper, Row } from "react-native-table-component";
 import Checkbox from "expo-checkbox";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Collapse,
   CollapseHeader,
@@ -17,6 +17,9 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import jwt_decode from "jwt-decode";
+import axios, { formToJSON } from "axios";
+
+const baseURL = "http://192.168.31.109:4000/api/arbitro/";
 
 const ArbitroScreen = () => {
   const navigation = useNavigation();
@@ -27,16 +30,49 @@ const ArbitroScreen = () => {
   const [comis, setComis] = useState("");
   const [entre, setEntre] = useState("");
 
+  const [respuesta, setRespuesta] = useState();
+  const [sid, setId] = useState();
+
   AsyncStorage.getItem("tusecretosecreto", (err, res) => {
     decode = jwt_decode(res);
+    setRespuesta(res);
     setAdmin(JSON.stringify(decode["admin"]));
     setSecre(JSON.stringify(decode["secretario"]));
     setJefe(JSON.stringify(decode["jefe"]));
     setArbit(JSON.stringify(decode["arbitro"]));
     setComis(JSON.stringify(decode["comision"]));
     setEntre(JSON.stringify(decode["entrenador"]));
+    setId(JSON.stringify(decode["uID"]).replaceAll('"', ""));
+    // console.log(JSON.stringify(decode));
     //console.log(JSON.stringify(decode));
   });
+
+  //console.log(sid);
+
+  const [data, setData] = useState("");
+  const [configt, setConfigt] = useState();
+  const fetchData = async () => {
+    try {
+      const token = respuesta.replaceAll('"', "");
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      setConfigt(config);
+      const response = await axios.get(baseURL + "/" + sid, config);
+      setData(response.data);
+      // console.log(response.data);
+    } catch (error) {
+      console.log("Error ", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [respuesta]);
+
+  console.log(JSON.stringify(data));
 
   return (
     <SafeAreaView style={styles.container}>
@@ -75,9 +111,9 @@ const ArbitroScreen = () => {
               <View>
                 {secre == 1 ? ( //Modificar esta parte cuando se tenga la pantalla de secretario
                   <TouchableOpacity
-                    onPress={() => navigation.navigate("Admin")}
+                    onPress={() => navigation.navigate("Secretario")}
                   >
-                    <Text style={styles.textcol}>Administrador</Text>
+                    <Text style={styles.textcol}>Secretario</Text>
                   </TouchableOpacity>
                 ) : (
                   <View></View>
@@ -86,7 +122,7 @@ const ArbitroScreen = () => {
               <View>
                 {jefe == 2 ? (
                   <TouchableOpacity onPress={() => navigation.navigate("Jefe")}>
-                    <Text style={styles.textcol}>Jefe de Arbitros</Text>
+                    <Text style={styles.textcol}>Jefe de Árbitros</Text>
                   </TouchableOpacity>
                 ) : (
                   <View></View>
@@ -97,7 +133,7 @@ const ArbitroScreen = () => {
                   <TouchableOpacity
                     onPress={() => navigation.navigate("Comision")}
                   >
-                    <Text style={styles.textcol}>Comision diciplinaria</Text>
+                    <Text style={styles.textcol}>Comisión Disciplinaria</Text>
                   </TouchableOpacity>
                 ) : (
                   <View></View>

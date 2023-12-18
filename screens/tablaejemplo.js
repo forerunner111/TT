@@ -6,9 +6,9 @@ import { TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const tablaejemplo = () => {
-  const [email, setEmail] = useState([]);
+  // const [email, setEmail] = useState([]);
 
-  const fetchData = () => {
+  /*const fetchData = () => {
     return axios
       .post("http://localhost:4000/api/register", {
         curp: "803",
@@ -35,7 +35,7 @@ const tablaejemplo = () => {
   useEffect(() => {
     fetchData();
   }, []);
-
+*/
   return (
     <SafeAreaView>
       <View>

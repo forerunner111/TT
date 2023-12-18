@@ -9,6 +9,7 @@ import axios, { formToJSON } from "axios";
 import jwt_decode from "jwt-decode";
 
 const baseURL = "http://192.168.31.109:4000/api/main";
+//const baseURL = "http://10.1.141.191:4000/api/main";
 
 const PartidosScreen = () => {
   const navigation = useNavigation();
@@ -123,14 +124,10 @@ const PartidosScreen = () => {
       <Text style={styles.titulo}>Partido</Text>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.IconInput}>
-          <TouchableOpacity
-            onPress={() => this.props.navigation.navigate("Login")}
-          >
+          <TouchableOpacity onPress={() => navigation.navigate("Login")}>
             <Ionicons name="person-circle-outline" size={35} color="#ff6624" />
           </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => this.props.navigation.navigate("Login")}
-          >
+          <TouchableOpacity onPress={() => navigation.navigate("Login")}>
             <Text style={styles.TextoLabels}>Iniciar sesión</Text>
           </TouchableOpacity>
         </View>
@@ -164,7 +161,7 @@ const PartidosScreen = () => {
           </ScrollView>
         </View>
         <View>
-          <Text style={styles.titulotabla2}>Estadisticas jugadores</Text>
+          <Text style={styles.titulotabla2}>Estadísticas jugadores</Text>
           <View>
             {
               //estadisticas inicio
@@ -244,9 +241,11 @@ const PartidosScreen = () => {
             </View>
           </ScrollView>
         </View>
+        {/*
         <TouchableOpacity style={styles.boton}>
           <Text style={styles.TextoBoton}>Descargar horarios</Text>
         </TouchableOpacity>
+        */}
         <TouchableOpacity onPress={() => navigation.navigate("Home")}>
           <Text style={styles.titulo}>Regresar</Text>
         </TouchableOpacity>

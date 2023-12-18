@@ -12,7 +12,7 @@ import ComisionScreen from "./screens/ComisionScreen";
 import JefeScreen from "./screens/JefeScreen";
 import ArbitroScreen from "./screens/ArbitroScreen";
 import SecretarioScreen from "./screens/SecretarioScreen";
-//import tablaejemplo from "./screens/tablaejemplo";
+import tablaejemplo from "./screens/tablaejemplo";
 
 const Stack = createStackNavigator();
 
@@ -76,7 +76,7 @@ export default function App() {
           component={tablaejemplo}
           options={{ headerShown: false }}
         />
-        */}
+      */}
         <Stack.Screen
           name="Arbitro"
           component={ArbitroScreen}

@@ -71,14 +71,14 @@ const JefeScreen = () => {
   }, [respuesta]);
 
   this.state = {
-    tableHeadUsuarios: ["Nombre", "Roles", "Validar"],
+    tableHeadUsuarios: ["Nombre", "Roles", "Validación"],
     widthArrUsuarios: [200, 200, 100],
     tableHeadPartidos: [
       "Num. Torneo",
       "Partido",
       "Ausente",
       "Fecha",
-      "Arbitros",
+      "Árbitros",
     ],
     widthArrPartidos: [100, 200, 100, 100, 300],
   };
@@ -297,7 +297,7 @@ const JefeScreen = () => {
             <Ionicons name="exit" size={35} color="#000000" />
           </TouchableOpacity>
 
-          <Text style={styles.titulo}>Jefe de arbitros</Text>
+          <Text style={styles.titulo}>Jefe de árbitros</Text>
           <Text></Text>
           <Text></Text>
         </View>
@@ -334,22 +334,22 @@ const JefeScreen = () => {
                 )}
               </View>
               <View>
-                {arbit == 3 ? (
+                {/*arbit == 3 ? (
                   <TouchableOpacity
                     onPress={() => navigation.navigate("Arbitro")}
                   >
-                    <Text style={styles.textcol}>Arbitro</Text>
+                    <Text style={styles.textcol}>Árbitro</Text>
                   </TouchableOpacity>
                 ) : (
                   <View></View>
-                )}
+                )*/}
               </View>
               <View>
                 {comis == 4 ? (
                   <TouchableOpacity
                     onPress={() => navigation.navigate("Comision")}
                   >
-                    <Text style={styles.textcol}>Comision disciplinaria</Text>
+                    <Text style={styles.textcol}>Comisión Disciplinaria</Text>
                   </TouchableOpacity>
                 ) : (
                   <View></View>
@@ -369,7 +369,7 @@ const JefeScreen = () => {
             </CollapseBody>
           </Collapse>
         </View>
-        <Text style={styles.Subtitulo}>Validacion de Usuarios</Text>
+        <Text style={styles.Subtitulo}>Validación de Usuarios</Text>
         {/*Tabla validacion Usuarios*/}
         <View>
           <ScrollView>

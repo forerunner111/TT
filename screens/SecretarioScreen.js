@@ -80,7 +80,7 @@ const SecretarioScreen = () => {
   }, [respuesta]);
 
   this.state = {
-    tableHeadValidacion: ["Equipo", "Rama", "Entrenador", "Validar"],
+    tableHeadValidacion: ["Equipo", "Rama", "Entrenador", "Validación"],
     widthArrValidacion: [200, 200, 100, 100],
     tableHeadHorarios: [
       "Vuelta",
@@ -282,12 +282,12 @@ const SecretarioScreen = () => {
   }
 
   const rowInfoTorneo = [
-    "Numero maximo de equipos por entrenador",
-    "Numero maximo de jugadores por equipo",
-    "Numero minimo de jugadores por equipo",
-    "Numero maximo de equipos por torneo",
-    "Numero minimo de equipos por torneo",
-    "Numero de dias antes del torneo para registrarse",
+    "Número maximo de equipos por entrenador",
+    "Número maximo de jugadores por equipo",
+    "Número minimo de jugadores por equipo",
+    "Número maximo de equipos por torneo",
+    "Número minimo de equipos por torneo",
+    "Número de dias antes del torneo para registrarse",
   ];
   const [maxEntre, onChangeMaxEntre] = useState("");
   const [maxJugadoresEquipo, onChangeMaxJugadoresEquipo] = useState("");
@@ -369,6 +369,7 @@ const SecretarioScreen = () => {
   }
 
   //credenciales
+  /*
   const tableDataCredencial = [];
   if (data == "") {
   } else {
@@ -403,7 +404,7 @@ const SecretarioScreen = () => {
       }
       tableDataCredencial.push(rowData);
     }
-  }
+  }*/
   console.log(JSON.stringify(data["respuesta"]));
 
   return (
@@ -456,29 +457,29 @@ const SecretarioScreen = () => {
               <View>
                 {jefe == 2 ? (
                   <TouchableOpacity onPress={() => navigation.navigate("Jefe")}>
-                    <Text style={styles.textcol}>Jefe de Arbitros</Text>
+                    <Text style={styles.textcol}>Jefe de Árbitros</Text>
                   </TouchableOpacity>
                 ) : (
                   <View></View>
                 )}
               </View>
               <View>
-                {arbit == 3 ? (
+                {/*arbit == 3 ? (
                   <TouchableOpacity
                     onPress={() => navigation.navigate("Arbitro")}
                   >
-                    <Text style={styles.textcol}>Arbitro</Text>
+                    <Text style={styles.textcol}>Árbitro</Text>
                   </TouchableOpacity>
                 ) : (
                   <View></View>
-                )}
+                )*/}
               </View>
               <View>
                 {comis == 4 ? (
                   <TouchableOpacity
                     onPress={() => navigation.navigate("Comision")}
                   >
-                    <Text style={styles.textcol}>Comision diciplinaria</Text>
+                    <Text style={styles.textcol}>Comisión Disciplinaria</Text>
                   </TouchableOpacity>
                 ) : (
                   <View></View>
@@ -498,7 +499,7 @@ const SecretarioScreen = () => {
             </CollapseBody>
           </Collapse>
           <Text style={styles.Subtitulo} paddingTop={10}>
-            Validacion de equipos
+            Validación de equipos
           </Text>
           {
             //Tabla Equipos inscritos
@@ -660,12 +661,14 @@ const SecretarioScreen = () => {
           {
             //Fin tabla Torneo
           }
+          {/*
           <Text style={styles.Subtitulo} paddingTop={10}>
             Credenciales de Jugadores
           </Text>
           {
             //Tabla Credenciales
           }
+          
           <View paddingHorizontal={10}>
             <ScrollView horizontal={true}>
               <View>
@@ -695,6 +698,7 @@ const SecretarioScreen = () => {
               </View>
             </ScrollView>
           </View>
+*/}
           {
             //Fin tabla Equipos inscritos
           }

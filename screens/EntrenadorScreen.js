@@ -266,7 +266,7 @@ const EntrenadorScreen = () => {
               <View>
                 {jefe == 2 ? (
                   <TouchableOpacity onPress={() => navigation.navigate("Jefe")}>
-                    <Text style={styles.textcol}>Jefe de Arbitros</Text>
+                    <Text style={styles.textcol}>Jefe de Árbitros</Text>
                   </TouchableOpacity>
                 ) : (
                   <View></View>
@@ -277,7 +277,7 @@ const EntrenadorScreen = () => {
                   <TouchableOpacity
                     onPress={() => navigation.navigate("Arbitro")}
                   >
-                    <Text style={styles.textcol}>Arbitro</Text>
+                    <Text style={styles.textcol}>Árbitro</Text>
                   </TouchableOpacity>
                 ) : (
                   <View></View>
@@ -288,7 +288,7 @@ const EntrenadorScreen = () => {
                   <TouchableOpacity
                     onPress={() => navigation.navigate("Comision")}
                   >
-                    <Text style={styles.textcol}>Comision disciplinaria</Text>
+                    <Text style={styles.textcol}>Comisión Disciplinaria</Text>
                   </TouchableOpacity>
                 ) : (
                   <View></View>
@@ -555,12 +555,12 @@ const EntrenadorScreen = () => {
                       </TouchableOpacity>
                     </View>
                   </View>
-                  <Text style={styles.TextoLabels}>Numero de Playera</Text>
+                  <Text style={styles.TextoLabels}>Número de Playera</Text>
                   <TextInput
                     style={styles.input}
                     onChangeText={onChangeNumPlayera}
                     value={numPlayera}
-                    placeholder="Numero de playera"
+                    placeholder="Número de playera"
                     maxLength={2}
                     keyboardType="numeric"
                   />

@@ -8,7 +8,7 @@ import { useNavigation } from "@react-navigation/native";
 import axios, { formToJSON } from "axios";
 import jwt_decode from "jwt-decode";
 
-const baseURL = "http://192.168.31.109:4000/api/main";
+const baseURL = "http://192.168.31.108:4000/api/main";
 //const baseURL = "http://10.1.141.191:4000/api/main";
 
 const PartidosScreen = () => {

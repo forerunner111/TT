@@ -9,7 +9,7 @@ import { useState } from "react";
 import Checkbox from "expo-checkbox";
 import axios from "axios";
 
-const baseURL = "http://192.168.31.109:4000/api/register";
+const baseURL = "http://192.168.31.108:4000/api/register";
 //const baseURL = "http://10.1.141.191:4000/api/register";
 
 const RegisterScreen = () => {

@@ -25,7 +25,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import jwt_decode from "jwt-decode";
 import axios, { formToJSON } from "axios";
 
-const baseURL = "http://192.168.31.109:4000/api/secretario";
+const baseURL = "http://192.168.31.108:4000/api/secretario";
 //const baseURL = "http://10.1.141.191:4000/api/secretario";
 
 const SecretarioScreen = () => {
@@ -464,7 +464,7 @@ const SecretarioScreen = () => {
                 )}
               </View>
               <View>
-                {/*arbit == 3 ? (
+                {arbit == 3 ? (
                   <TouchableOpacity
                     onPress={() => navigation.navigate("Arbitro")}
                   >
@@ -472,7 +472,7 @@ const SecretarioScreen = () => {
                   </TouchableOpacity>
                 ) : (
                   <View></View>
-                )*/}
+                )}
               </View>
               <View>
                 {comis == 4 ? (

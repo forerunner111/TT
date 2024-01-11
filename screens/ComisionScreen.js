@@ -23,7 +23,7 @@ import axios, { formToJSON } from "axios";
 import { useState } from "react";
 import { Table, TableWrapper, Row } from "react-native-table-component";
 
-const baseURL = "http://192.168.31.109:4000/api/comision";
+const baseURL = "http://192.168.31.108:4000/api/comision";
 //const baseURL = "http://10.1.141.191:4000/api/comision";
 
 const ComisionScreen = () => {
@@ -233,7 +233,7 @@ const ComisionScreen = () => {
               )}
             </View>
             <View>
-              {/*arbit == 3 ? (
+              {arbit == 3 ? (
                 <TouchableOpacity
                   onPress={() => navigation.navigate("Arbitro")}
                 >
@@ -241,7 +241,7 @@ const ComisionScreen = () => {
                 </TouchableOpacity>
               ) : (
                 <View></View>
-              )*/}
+              )}
             </View>
             <View>
               {entre == 5 ? (
